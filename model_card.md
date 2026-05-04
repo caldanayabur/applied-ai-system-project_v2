@@ -73,3 +73,59 @@ If I extended this project, I would swap out all the songs in the dataset for tr
 
 
 Building this recommender showed me how complex real music apps like Spotify must be, since they serve millions of users and use far more features than my simple system. I learned it’s hard to recommend music to people with very specific tastes. For example, users with extreme preferences only got low-scoring, generic results, which made the system feel unhelpful for them. I also realized how much human judgment still matters, because the model can only use the features it has and might miss what really makes a song enjoyable for someone. I was surprised that even a simple scoring system could still feel somewhat personalized. I also found it important to double-check the changes suggested by AI tools, to make sure the code still made sense.
+
+---
+
+## 10. Responsible AI Reflection
+
+### What are the limitations or biases in your system?
+
+**Data Bias:** The 20-song catalog is small and non-representative of music diversity. It underrepresents many genres (only 1-2 songs per genre in some cases) and lacks diversity in artist representation. This means the system will inherently favor the represented genres and moods, potentially introducing filter bubbles.
+
+**Preference Bias:** The system assumes users can articulate their preferences numerically (e.g., "I want energy 0.85"). Many people don't think about music this way, so the system may not work well for users with intuitive, emotional, or trend-based preferences.
+
+**Feature Limitations:** The system only considers 8 audio features (energy, tempo, valence, danceability, acousticness, genre, mood, artist). It ignores lyrics, cultural context, artist identity, production quality, and listening history. A user might hate a song despite perfect audio feature matches.
+
+**Filter Bubble Risk:** By emphasizing genre matching (+2 points), the system can create filter bubbles—users with narrow preferences will only see songs from that genre.
+
+### Could your AI be misused, and how would you prevent that?
+
+**Potential Misuse:**
+1. **Recommendation Manipulation:** If someone could modify the song catalog or features, they could artificially promote/suppress certain music for commercial gain.
+2. **Over-reliance on LLM Explanations:** Users might trust AI explanations uncritically without realizing they can hallucinate or oversimplify.
+3. **Surveillance:** If expanded to track preferences over time, the system could create detailed listening profiles for manipulation or discrimination.
+
+**Prevention Strategies:**
+- Keep transparent: Show scoring logic alongside LLM explanations
+- Educate users: Label LLM outputs as "AI-generated" and encourage critical thinking
+- Audit outputs: Log all LLM calls and test for bias/hallucination
+- Limit scope: Keep as a learning tool, not a commercial engine
+- No tracking: Don't store listening history or build user profiles
+
+### What surprised you while testing your AI's reliability?
+
+1. **LLM Hallucinations:** Even with clean context, the LLM sometimes invented details ("perfect for working out" when energy wasn't high). This taught me that LLM outputs need validation.
+
+2. **Graceful Degradation Works Better Than Expected:** Rule-based explanations like "genre match; mood match" are actually more trustworthy than an LLM sometimes making things up.
+
+3. **Importance of Logging:** Structured JSON logs of every LLM call were invaluable for debugging. When explanations were weird, I could trace exactly what context the LLM received.
+
+4. **Reliability > Perfection:** The system's resilience (3x retries, graceful fallback) mattered more than perfect LLM explanations. Users prefer a working system with imperfect explanations to a broken one with no explanations.
+
+### Collaboration with AI
+
+**One instance when AI gave a helpful suggestion:**
+
+When designing the RAG context builder, I asked Copilot to review my prompt structure. It suggested breaking the context into clearly labeled sections (Song Information, User Preferences, Match Analysis) instead of a paragraph blob. This simple change significantly improved LLM explanation quality because the model could clearly distinguish different information types.
+
+**One instance where AI's suggestion was flawed or incorrect:**
+
+Copilot suggested using async/await for the LLM API calls to improve performance. I started implementing this, but it turned out to be overkill for a CLI tool processing 5 recommendations sequentially. The complexity wasn't worth the marginal speedup, and it made error handling harder. I reverted to simple synchronous calls with retry logic.
+
+---
+
+**Key Takeaway:** AI responsibility means:
+- Admitting when you don't know (graceful fallback)
+- Showing your work (logging, transparent context)
+- Staying humble about limitations (documenting biases)
+- Prioritizing reliability over perfection
