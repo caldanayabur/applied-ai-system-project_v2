@@ -1,5 +1,7 @@
 # 🎵 Music Recommender with Song Descriptions
 
+https://github.com/user-attachments/assets/ee09d37a-f186-49fd-93a9-a77b477c22de
+
 ## Original Project Context
 
 This project extends the **Music Recommender Simulation** (from Modules 1-3), which scored songs based on user preferences for genre, mood, energy, acousticness, and other audio features using rule-based weighted scoring. The original system ranked candidates by static point totals and returned explanations like "genre match (+2.0); mood match (+1.0)". 
