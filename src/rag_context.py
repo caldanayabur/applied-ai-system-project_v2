@@ -2,7 +2,7 @@
 RAG Context Builder for Music Recommender.
 
 This module builds retrieval contexts from user preferences and song metadata
-to provide rich context for the LLM explanation generation.
+to provide rich context for song description generation.
 """
 
 from typing import Dict, List, Any, Optional

@@ -10,13 +10,7 @@ You will implement the functions in recommender.py:
 """
 
 import os
-import sys
-from pathlib import Path
-
-# Add parent directory to path so we can import src modules
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from src.recommender import load_songs, recommend_songs_with_rag
+from .recommender import load_songs, recommend_songs_with_descriptions
 
 
 def main() -> None:
@@ -60,24 +54,24 @@ def main() -> None:
         for k, v in profile.items():
             print(f"  {k}: {v}")
         
-        # Try to use RAG-enhanced recommendations, fall back to regular if LLM unavailable
+        # Try to use LLM-enhanced recommendations, fall back to regular if LLM unavailable
         try:
-            recommendations = recommend_songs_with_rag(profile, songs, k=5, use_llm=True)
-            rag_status = "[LLM Enhanced]"
+            recommendations = recommend_songs_with_descriptions(profile, songs, k=5, use_llm=True)
+            llm_status = "[LLM Enhanced]"
         except Exception as e:
             # Fallback without LLM
-            from src.recommender import recommend_songs
+            from .recommender import recommend_songs
             recommendations = recommend_songs(profile, songs, k=5)
-            rag_status = "[Fallback: No LLM]"
+            llm_status = "[Fallback: No LLM]"
         
-        print(f"\nTop recommendations ({rag_status}):\n")
+        print(f"\nTop recommendations ({llm_status}):\n")
         for idx, rec in enumerate(recommendations, 1):
-            song, score, explanation = rec
+            song, score, description = rec
             print("=" * 40)
             print(f"{idx}. Title      : {song['title']}")
             print(f"   Artist     : {song['artist']}")
             print(f"   Score      : {score:.2f}")
-            print(f"   Explanation: {explanation}")
+            print(f"   Description: {description}")
         print("=" * 40)
 
 

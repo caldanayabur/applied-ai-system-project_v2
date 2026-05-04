@@ -36,65 +36,12 @@ def test_llm_engine_with_custom_model():
         print(f"⚠ Custom model initialization skipped (Copilot CLI not available): {type(e).__name__}")
 
 
-def test_llm_fallback_explanation():
-    """Test fallback explanation when LLM is unavailable."""
+def test_llm_fallback_description():
+    """Test fallback description when LLM is unavailable."""
     # Create engine (CLI-based, no API key needed)
     engine = LLMEngine()
     
-    song = {
-        "title": "Test Song",
-        "artist": "Test Artist",
-        "genre": "pop",
-        "mood": "happy"
-    }
-    
-    scoring_reasons = ["genre match (+2.0)", "energy similarity (+0.5)"]
-    
-    # Test fallback
-    fallback_text = engine._fallback_explanation(song, scoring_reasons)
-    assert "Test Song" in fallback_text
-    assert "genre match" in fallback_text
-    print(f"✓ Fallback explanation generated: {fallback_text}")
-
-
-def test_llm_context_building():
-    """Test context building for LLM."""
-    engine = LLMEngine()
-    
-    song = {
-        "title": "Coffee Shop Stories",
-        "artist": "Slow Stereo",
-        "genre": "jazz",
-        "mood": "relaxed",
-        "energy": 0.37,
-        "tempo_bpm": 90,
-        "valence": 0.71,
-        "danceability": 0.54,
-        "acousticness": 0.89
-    }
-    
-    user_prefs = {
-        "favorite_genre": "jazz",
-        "favorite_mood": "relaxed",
-        "target_energy": 0.4,
-        "likes_acoustic": True
-    }
-    
-    context = engine._build_context(song, user_prefs, 5.0, ["genre match", "mood match"])
-    
-    assert "Coffee Shop Stories" in context
-    assert "jazz" in context
-    assert "relaxed" in context
-    print(f"✓ Context built successfully")
-
-
-def test_llm_prompt_building():
-    """Test prompt building for LLM."""
-    engine = LLMEngine()
-    
-    song = {
-        "title": "Test Song",
-        "artist": "Test Artist",
+    metadata = {
         "genre": "pop",
         "mood": "happy",
         "energy": 0.8,
@@ -104,15 +51,68 @@ def test_llm_prompt_building():
         "acousticness": 0.2
     }
     
-    user_prefs = {"favorite_genre": "pop", "favorite_mood": "happy"}
+    # Test fallback
+    fallback_text, success = engine.generate_song_description(
+        song_title="Test Song",
+        artist="Test Artist",
+        metadata=metadata
+    )
     
-    context = engine._build_context(song, user_prefs, 3.0, ["genre match"])
-    prompt = engine._build_prompt(context, song, user_prefs, ["genre match"])
+    assert "Test Song" in fallback_text
+    assert "Test Artist" in fallback_text
+    assert "Description:" in fallback_text
+    print(f"✓ Fallback description generated: {fallback_text[:100]}...")
+
+
+def test_llm_prompt_building():
+    """Test prompt building for LLM description generation."""
+    engine = LLMEngine()
+    
+    metadata = {
+        "genre": "pop",
+        "mood": "happy",
+        "energy": 0.8,
+        "tempo_bpm": 120,
+        "valence": 0.85,
+        "danceability": 0.8,
+        "acousticness": 0.2
+    }
+    
+    prompt = engine._build_prompt("Test Song", "Test Artist", metadata)
     
     assert "Test Song" in prompt
-    assert "genre match" in prompt
-    assert "personalized explanation" in prompt.lower()
+    assert "Test Artist" in prompt
+    assert "STRICT CONSTRAINTS:" in prompt
+    assert "lyrical themes" in prompt.lower() or "lyrics" in prompt.lower()
     print(f"✓ Prompt built successfully (length: {len(prompt)} chars)")
+
+
+def test_description_format():
+    """Test that descriptions follow the required format."""
+    engine = LLMEngine()
+    
+    metadata = {
+        "genre": "jazz",
+        "mood": "relaxed",
+        "energy": 0.4,
+        "tempo_bpm": 90,
+        "valence": 0.7,
+        "danceability": 0.5,
+        "acousticness": 0.8
+    }
+    
+    description, success = engine.generate_song_description(
+        song_title="Coffee Shop Stories",
+        artist="Slow Stereo",
+        metadata=metadata
+    )
+    
+    # Should follow format: "Title – Artist Description: ..."
+    assert "–" in description or "-" in description
+    assert "Description:" in description
+    assert "Coffee Shop Stories" in description
+    assert "Slow Stereo" in description
+    print(f"✓ Description format is correct: {description[:120]}...")
 
 
 if __name__ == "__main__":
@@ -120,8 +120,8 @@ if __name__ == "__main__":
     
     test_llm_engine_initialization()
     test_llm_engine_with_custom_model()
-    test_llm_fallback_explanation()
-    test_llm_context_building()
+    test_llm_fallback_description()
     test_llm_prompt_building()
+    test_description_format()
     
     print("\n=== All tests passed ===\n")

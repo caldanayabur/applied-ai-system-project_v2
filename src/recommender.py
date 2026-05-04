@@ -42,8 +42,8 @@ class Recommender:
         return self.songs[:k]
 
     def explain_recommendation(self, user: UserProfile, song: Song) -> str:
-        # TODO: Implement explanation logic
-        return "Explanation placeholder"
+        # TODO: Implement description logic
+        return "Description placeholder"
 
 def load_songs(csv_path: str) -> List[Dict]:
     """Load songs from a CSV file."""
@@ -121,7 +121,7 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
 
 def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
     """Recommend top k songs for a user."""
-    # Score each song and collect (song, score, explanation)
+    # Score each song and collect (song, score, description)
     scored = [
         (song, score, "; ".join(reasons))
         for song in songs
@@ -133,35 +133,40 @@ def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tup
     return scored[:k]
 
 
-def recommend_songs_with_rag(
+def recommend_songs_with_descriptions(
     user_prefs: Dict,
     songs: List[Dict],
     k: int = 5,
     use_llm: bool = True
 ) -> List[Tuple[Dict, float, str]]:
     """
-    Recommend top k songs for a user with RAG-enhanced explanations.
+    Recommend top k songs for a user with LLM-generated song descriptions.
     
-    This function uses the same scoring as recommend_songs() but enhances
-    the explanations using RAG and an LLM for more personalized, natural language.
+    This function:
+    1. Uses the same scoring logic as recommend_songs() (rule-based, unchanged)
+    2. Finalizes top-N recommendations
+    3. Invokes LLM ONLY to generate lyrical and artist descriptions for each recommendation
+    
+    The LLM descriptions focus on:
+    - What the song's lyrics are generally about (themes, narrative, emotional message)
+    - The artist or band's musical style and artistic identity
     
     Args:
-        user_prefs: User preference dictionary
+        user_prefs: User preference dictionary (used ONLY for scoring, NOT for LLM)
         songs: List of song dictionaries
         k: Number of recommendations to return
-        use_llm: Whether to use LLM for explanations (True) or fallback (False)
+        use_llm: Whether to use LLM for descriptions (True) or fallback (False)
     
     Returns:
-        List of (song, score, explanation) tuples
+        List of (song, score, description) tuples
     """
     from .llm_engine import get_llm_engine
-    from .rag_context import RAGContextBuilder
     from .logger import recommender_logger
     
-    # Get base recommendations with scores
+    # Step 1: Get base recommendations using rule-based scoring (unchanged)
     recommendations = recommend_songs(user_prefs, songs, k)
     
-    # Enhance explanations with RAG if LLM is enabled
+    # Step 2: Enhance descriptions with LLM if enabled
     if not use_llm:
         return recommendations
     
@@ -169,25 +174,29 @@ def recommend_songs_with_rag(
         llm_engine = get_llm_engine()
         enhanced_recommendations = []
         
-        for song, score, base_explanation in recommendations:
-            # Parse the base explanation to get scoring reasons
-            scoring_reasons = [r.strip() for r in base_explanation.split(";")]
-            
-            # Generate LLM-enhanced explanation
-            enhanced_explanation, success = llm_engine.generate_explanation(
-                song=song,
-                user_prefs=user_prefs,
-                score=score,
-                scoring_reasons=scoring_reasons
+        for song, score, base_description in recommendations:
+            # Generate LLM description based ONLY on song metadata, not user preferences or scores
+            description, success = llm_engine.generate_song_description(
+                song_title=song.get('title', 'Unknown'),
+                artist=song.get('artist', 'Unknown'),
+                metadata={
+                    'genre': song.get('genre', 'Unknown'),
+                    'mood': song.get('mood', 'Unknown'),
+                    'energy': song.get('energy', 'N/A'),
+                    'tempo_bpm': song.get('tempo_bpm', 'N/A'),
+                    'valence': song.get('valence', 'N/A'),
+                    'danceability': song.get('danceability', 'N/A'),
+                    'acousticness': song.get('acousticness', 'N/A')
+                }
             )
             
-            enhanced_recommendations.append((song, score, enhanced_explanation))
+            enhanced_recommendations.append((song, score, description))
         
         return enhanced_recommendations
     
     except Exception as e:
         recommender_logger.log_error(
-            "rag_enhancement_failed",
+            "description_generation_failed",
             str(e),
             {"num_songs": len(recommendations), "use_llm": use_llm}
         )

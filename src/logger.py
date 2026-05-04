@@ -103,19 +103,21 @@ class StructuredLogger:
         level = logging.INFO if success else logging.WARNING
         self.logger.log(level, self._format_event("llm_call_end", details))
     
-    def log_explanation_generated(
+    def log_song_description_generated(
         self,
         song_title: str,
+        artist: str,
         source: str,
-        explanation_length: int
+        description_length: int
     ) -> None:
-        """Log when an explanation is generated (LLM or fallback)."""
+        """Log when a song description is generated (LLM or fallback)."""
         details = {
             "song_title": song_title,
+            "artist": artist,
             "source": source,  # "llm" or "fallback"
-            "explanation_length": explanation_length
+            "description_length": description_length
         }
-        self.logger.info(self._format_event("explanation_generated", details))
+        self.logger.info(self._format_event("song_description_generated", details))
     
     def log_error(
         self,

@@ -1,21 +1,21 @@
 id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
-1,Sunrise City,Neon Echo,pop,happy,0.82,118,0.84,0.79,0.18
-2,Midnight Coding,LoRoom,lofi,chill,0.42,78,0.56,0.62,0.71
-3,Storm Runner,Voltline,rock,intense,0.91,152,0.48,0.66,0.10
-4,Library Rain,Paper Lanterns,lofi,chill,0.35,72,0.60,0.58,0.86
-5,Gym Hero,Max Pulse,pop,intense,0.93,132,0.77,0.88,0.05
-6,Spacewalk Thoughts,Orbit Bloom,ambient,chill,0.28,60,0.65,0.41,0.92
-7,Coffee Shop Stories,Slow Stereo,jazz,relaxed,0.37,90,0.71,0.54,0.89
-8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22
-9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78
-10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35
-11,Desert Mirage,Sahara Sun,world,exotic,0.68,105,0.73,0.65,0.40
-12,Pixel Parade,Bitcrush,chip tune,playful,0.88,140,0.90,0.80,0.12
-13,Blue Horizon,Oceanic Dream,blues,melancholic,0.55,85,0.38,0.50,0.77
-14,Golden Fields,Harvest Moon,country,nostalgic,0.60,100,0.70,0.67,0.45
-15,Quantum Leap,Future Logic,drum and bass,energetic,0.97,174,0.65,0.92,0.08
-16,Temple Shadows,Zen Path,new age,calm,0.30,60,0.80,0.35,0.95
-17,Neon Samurai,Tokyo Pulse,trap,edgy,0.85,150,0.52,0.78,0.20
-18,Winter Waltz,Crystal Ensemble,classical,serene,0.25,60,0.75,0.30,0.98
-19,Fiesta Nights,La Rumba,latin,festive,0.92,128,0.89,0.87,0.18
-20,Steel Skies,Iron Brigade,metal,aggressive,0.99,160,0.40,0.55,0.05
+1,Shut Up and Dance,Walk The Moon,pop,happy,0.81,128,0.84,0.79,0.18
+2,Weightless,Marconi Union,lofi,chill,0.16,71,0.56,0.62,0.71
+3,Ace of Spades,Motörhead,rock,intense,0.96,141,0.48,0.66,0.1
+4,Morning Coffee,luvbird,lofi,chill,0.25,74,0.6,0.58,0.86
+5,Physical,Dua Lipa,pop,intense,0.89,147,0.77,0.88,0.05
+6,An Ending (Ascent),Brian Eno,ambient,chill,0.12,60,0.65,0.41,0.92
+7,Blue Train,John Coltrane,jazz,relaxed,0.42,90,0.71,0.54,0.89
+8,Nightcall,Kavinsky,synthwave,moody,0.78,110,0.49,0.73,0.22
+9,Focus,H.E.R.,lofi,focused,0.38,80,0.59,0.6,0.78
+10,Lisztomania,Phoenix,indie pop,happy,0.72,120,0.81,0.82,0.35
+11,Desert Rose,Sting,world,exotic,0.68,105,0.73,0.65,0.4
+12,Rainbow Road,nanobii,chip tune,playful,0.92,175,0.9,0.8,0.12
+13,The Thrill Is Gone,B.B. King,blues,melancholic,0.45,85,0.38,0.5,0.77
+14,"Take Me Home, Country Roads",John Denver,country,nostalgic,0.52,82,0.7,0.67,0.45
+15,Voodoo People (Pendulum Remix),The Prodigy,drum and bass,energetic,0.97,174,0.65,0.92,0.08
+16,Weightless,Mac Quayle,new age,calm,0.2,63,0.8,0.35,0.95
+17,Mask Off,Future,trap,edgy,0.72,150,0.52,0.78,0.2
+18,Spiegel im Spiegel,Arvo Pärt,classical,serene,0.05,60,0.75,0.3,0.98
+19,Bamboléo,Gipsy Kings,latin,festive,0.91,128,0.89,0.87,0.18
+20,Holy Wars... The Punishment Due,Megadeth,metal,aggressive,0.98,160,0.4,0.55,0.05

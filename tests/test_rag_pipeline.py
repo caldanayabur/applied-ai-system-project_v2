@@ -1,8 +1,8 @@
 """
-End-to-end tests for the RAG recommendation pipeline.
+End-to-end tests for the recommendation pipeline with song descriptions.
 
 These tests verify that the full recommendation flow works correctly,
-including RAG context building and LLM integration.
+including LLM-based song description generation.
 """
 
 import sys
@@ -11,7 +11,7 @@ import os
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.recommender import load_songs, recommend_songs, recommend_songs_with_rag
+from src.recommender import load_songs, recommend_songs, recommend_songs_with_descriptions
 from src.rag_context import RAGContextBuilder, build_rag_context
 from src.llm_engine import LLMEngine
 
@@ -44,7 +44,7 @@ def test_baseline_recommendations():
     recommendations = recommend_songs(user_prefs, songs, k=5)
     
     assert len(recommendations) == 5
-    assert all(len(rec) == 3 for rec in recommendations)  # (song, score, explanation)
+    assert all(len(rec) == 3 for rec in recommendations)  # (song, score, description)
     assert recommendations[0][1] >= recommendations[1][1]  # Sorted by score
     print(f"✓ Baseline recommendations generated (top score: {recommendations[0][1]:.2f})")
 
@@ -122,7 +122,7 @@ def test_rag_context_builder_methods():
     print("✓ Match context builder works")
 
 
-def test_llm_fallback_with_rag():
+def test_llm_fallback_with_descriptions():
     """Test that LLM fallback works when API key is missing."""
     script_dir = os.path.dirname(os.path.abspath(__file__))
     data_path = os.path.join(script_dir, "..", "data", "songs.csv")
@@ -136,11 +136,14 @@ def test_llm_fallback_with_rag():
     }
     
     # Call with LLM enabled (should gracefully fallback)
-    recommendations = recommend_songs_with_rag(user_prefs, songs, k=3, use_llm=True)
+    recommendations = recommend_songs_with_descriptions(user_prefs, songs, k=3, use_llm=True)
     
     assert len(recommendations) == 3
     assert all(len(rec) == 3 for rec in recommendations)
-    print(f"✓ RAG-enhanced recommendations work with fallback (top score: {recommendations[0][1]:.2f})")
+    # Verify descriptions follow format
+    for song, score, description in recommendations:
+        assert "Description:" in description or "–" in description or "-" in description
+    print(f"✓ Description-enhanced recommendations work with fallback (top score: {recommendations[0][1]:.2f})")
 
 
 def test_llm_engine_initialization():
@@ -151,33 +154,36 @@ def test_llm_engine_initialization():
     print("✓ LLM engine initialization successful")
 
 
-def test_llm_fallback_explanation():
-    """Test LLM fallback explanation generation."""
+def test_llm_fallback_description():
+    """Test LLM fallback description generation."""
     engine = LLMEngine()
     
-    song = {
-        "title": "Test Song",
-        "artist": "Test Artist",
+    metadata = {
         "genre": "jazz",
-        "mood": "relaxed"
+        "mood": "relaxed",
+        "energy": 0.4,
+        "tempo_bpm": 90,
+        "valence": 0.7,
+        "danceability": 0.5,
+        "acousticness": 0.8
     }
     
-    explanation, success = engine.generate_explanation(
-        song=song,
-        user_prefs={"favorite_genre": "jazz"},
-        score=5.0,
-        scoring_reasons=["genre match"]
+    description, success = engine.generate_song_description(
+        song_title="Test Song",
+        artist="Test Artist",
+        metadata=metadata
     )
     
-    # Should return fallback explanation
-    assert "Test Song" in explanation
-    assert isinstance(explanation, str)
-    assert len(explanation) > 0
-    print(f"✓ LLM fallback explanation: {explanation[:80]}...")
+    # Should return fallback description
+    assert "Test Song" in description
+    assert "Test Artist" in description
+    assert isinstance(description, str)
+    assert len(description) > 0
+    print(f"✓ LLM fallback description: {description[:100]}...")
 
 
 def test_recommendation_scores_unchanged():
-    """Verify that scores don't change with RAG enhancement."""
+    """Verify that scores don't change with description enhancement."""
     script_dir = os.path.dirname(os.path.abspath(__file__))
     data_path = os.path.join(script_dir, "..", "data", "songs.csv")
     
@@ -193,27 +199,27 @@ def test_recommendation_scores_unchanged():
     baseline_recs = recommend_songs(user_prefs, songs, k=5)
     baseline_scores = [rec[1] for rec in baseline_recs]
     
-    # Get RAG recommendations (will use fallback)
-    rag_recs = recommend_songs_with_rag(user_prefs, songs, k=5, use_llm=True)
-    rag_scores = [rec[1] for rec in rag_recs]
+    # Get description-enhanced recommendations (will use fallback)
+    desc_recs = recommend_songs_with_descriptions(user_prefs, songs, k=5, use_llm=True)
+    desc_scores = [rec[1] for rec in desc_recs]
     
     # Scores should be identical
-    for i, (baseline_score, rag_score) in enumerate(zip(baseline_scores, rag_scores)):
-        assert abs(baseline_score - rag_score) < 0.001
+    for i, (baseline_score, desc_score) in enumerate(zip(baseline_scores, desc_scores)):
+        assert abs(baseline_score - desc_score) < 0.001
     
-    print(f"✓ Scores unchanged after RAG enhancement: {baseline_scores[:3]}")
+    print(f"✓ Scores unchanged after description enhancement: {baseline_scores[:3]}")
 
 
 if __name__ == "__main__":
-    print("\n=== E2E RAG Pipeline Tests ===\n")
+    print("\n=== E2E Description Pipeline Tests ===\n")
     
     test_load_songs()
     test_baseline_recommendations()
     test_rag_context_building()
     test_rag_context_builder_methods()
     test_llm_engine_initialization()
-    test_llm_fallback_explanation()
-    test_llm_fallback_with_rag()
+    test_llm_fallback_description()
+    test_llm_fallback_with_descriptions()
     test_recommendation_scores_unchanged()
     
     print("\n=== All E2E tests passed ===\n")

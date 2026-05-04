@@ -1,14 +1,14 @@
 """
-LLM Engine for generating personalized music recommendation explanations.
+LLM Engine for generating song descriptions focused on lyrics and artist identity.
 
 This module handles all interactions with the LLM via GitHub Copilot Python SDK
-to generate dynamic, contextual explanations for recommendations.
-Falls back to rule-based explanations if the SDK is not available.
+to generate high-level lyrical themes and artist musical style descriptions
+for real songs only. Prevents hallucination by constraining output to widely-known
+information and avoiding fabricated facts.
 """
 
 import os
-import json
-from typing import Optional, Dict, Tuple, List, Any
+from typing import Optional, Dict, Tuple, Any
 from tenacity import retry, stop_after_attempt, wait_exponential
 from .logger import recommender_logger
 
@@ -22,10 +22,11 @@ except ImportError:
 
 class LLMEngine:
     """
-    Handles LLM interactions for generating personalized recommendation explanations.
+    Handles LLM interactions for generating song descriptions.
     
+    Focuses on lyrical themes and artist musical identity for REAL songs only.
     Uses GitHub Copilot Python SDK for managed LLM access.
-    If SDK is not available, gracefully falls back to rule-based explanations.
+    If SDK is not available, gracefully falls back to rule-based descriptions.
     """
     
     def __init__(
@@ -49,84 +50,137 @@ class LLMEngine:
         else:
             recommender_logger.info("LLM Engine initialized in fallback mode (Copilot SDK unavailable)")
     
-    def generate_explanation(
+    def generate_song_description(
         self,
-        song: Dict[str, Any],
-        user_prefs: Dict[str, Any],
-        score: float,
-        scoring_reasons: List[str]
+        song_title: str,
+        artist: str,
+        metadata: Dict[str, Any]
     ) -> Tuple[str, bool]:
         """
-        Generate a personalized explanation for why a song was recommended.
+        Generate a description of a song's lyrical themes and artist style.
+        
+        CONSTRAINTS (strictly enforced):
+        - Descriptions are for REAL songs and artists only
+        - Do NOT claim exact lyrics or quote specific verses
+        - Do NOT invent release dates, awards, chart rankings, or career history
+        - Keep to high-level, widely-known thematic interpretations
+        - Do NOT mention recommendation logic, scores, similarity metrics, or user preferences
         
         Args:
-            song: Song dictionary with metadata
-            user_prefs: User preference dictionary
-            score: Recommendation score
-            scoring_reasons: List of scoring reasons (from score_song)
+            song_title: Title of the song (e.g., "Shut Up and Dance")
+            artist: Artist or band name (e.g., "Walk The Moon")
+            metadata: Dictionary with dataset fields (genre, mood, energy, tempo_bpm, etc.)
         
         Returns:
-            Tuple of (explanation_text, success_flag)
-            If LLM fails or unavailable, returns rule-based explanation with success=False
+            Tuple of (description_text, success_flag)
+            Format: "<Song Title> – <Artist> Description: <2–3 sentence description>"
+            If LLM fails or unavailable, returns rule-based description with success=False
         """
         # For now, always use fallback since SDK is not properly available
         # This ensures the system works reliably while we resolve SDK setup
-        fallback_explanation = self._fallback_explanation(song, scoring_reasons)
+        fallback_description = self._fallback_description(song_title, artist, metadata)
         
-        recommender_logger.log_explanation_generated(
-            song_title=song.get("title", "Unknown"),
+        recommender_logger.log_song_description_generated(
+            song_title=song_title,
+            artist=artist,
             source="fallback",
-            explanation_length=len(fallback_explanation)
+            description_length=len(fallback_description)
         )
         
-        return fallback_explanation, False
-    
-    def _build_context(
-        self,
-        song: Dict[str, Any],
-        user_prefs: Dict[str, Any],
-        score: float,
-        scoring_reasons: List[str]
-    ) -> str:
-        """Build a concise context document for the LLM."""
-        context_parts = [
-            f"Song: '{song.get('title', 'Unknown')}' by {song.get('artist', 'Unknown Artist')}",
-            f"Genre: {song.get('genre', 'Unknown')}, Mood: {song.get('mood', 'Unknown')}",
-            f"Audio Features: Energy={song.get('energy', 'N/A')}, Tempo={song.get('tempo_bpm', 'N/A')} BPM, "
-            f"Valence={song.get('valence', 'N/A')}, Danceability={song.get('danceability', 'N/A')}, "
-            f"Acousticness={song.get('acousticness', 'N/A')}",
-            "",
-            f"User Preferences: {user_prefs}",
-            f"Match Score: {score:.2f}",
-            f"Matching Reasons: {', '.join(scoring_reasons) if scoring_reasons else 'None'}"
-        ]
-        return "\n".join(context_parts)
+        return fallback_description, False
     
     def _build_prompt(
         self,
-        context: str,
-        song: Dict[str, Any],
-        user_prefs: Dict[str, Any],
-        scoring_reasons: List[str]
+        song_title: str,
+        artist: str,
+        metadata: Dict[str, Any]
     ) -> str:
-        """Build a prompt for the LLM."""
-        prompt = f"""Based on the following information, write a brief, personalized explanation 
-(1-2 sentences) for why this song is recommended to the user. 
-Be conversational and reference specific audio features or user preferences.
+        """
+        Build a constrained prompt for the LLM to generate song descriptions.
+        
+        The prompt explicitly prohibits hallucination and focuses on:
+        1. What the song's lyrics are generally about (themes, narrative, emotional message)
+        2. The artist or band's musical style and artistic identity
+        """
+        metadata_str = "\n".join([
+            f"  - Genre: {metadata.get('genre', 'Unknown')}",
+            f"  - Mood: {metadata.get('mood', 'Unknown')}",
+            f"  - Energy: {metadata.get('energy', 'N/A')}",
+            f"  - Tempo: {metadata.get('tempo_bpm', 'N/A')} BPM",
+            f"  - Valence: {metadata.get('valence', 'N/A')}",
+            f"  - Danceability: {metadata.get('danceability', 'N/A')}",
+            f"  - Acousticness: {metadata.get('acousticness', 'N/A')}"
+        ])
+        
+        prompt = f"""Generate a brief description of "{song_title}" by {artist} based ONLY on widely-known information about this real song and artist.
 
-{context}
+STRICT CONSTRAINTS:
+- Do NOT claim exact lyrics or quote specific verses
+- Do NOT invent release dates, awards, or chart rankings
+- Do NOT fabricate career history or personal details
+- Do NOT mention recommendation scores or user preferences
+- Focus on: (1) What the lyrics are generally about (themes, narrative, mood), and (2) The artist's musical style and identity
+- Output exactly 2-3 sentences in a neutral, informative tone
+- NO bullet points, NO emojis
 
-Explanation:"""
+Song Metadata:
+{metadata_str}
+
+Output format (must match exactly):
+{song_title} – {artist} Description: [Your 2-3 sentence description here]"""
+        
         return prompt
     
-    def _fallback_explanation(self, song: Dict[str, Any], scoring_reasons: List[str]) -> str:
+    def _fallback_description(
+        self,
+        song_title: str,
+        artist: str,
+        metadata: Dict[str, Any]
+    ) -> str:
         """
-        Generate a rule-based explanation when LLM fails or is unavailable.
+        Generate a rule-based description when LLM fails or is unavailable.
         
-        This ensures the system degrades gracefully.
+        Uses only dataset metadata (genre, mood) to infer a generic description.
+        Ensures the system degrades gracefully.
         """
-        reasons_text = "; ".join(scoring_reasons) if scoring_reasons else "matches your preferences"
-        return f"We picked '{song.get('title', 'Unknown')}' because it {reasons_text}."
+        genre = metadata.get('genre', 'Unknown').lower()
+        mood = metadata.get('mood', 'Unknown').lower()
+        
+        # Genre-based musical style hint
+        genre_styles = {
+            'pop': 'contemporary pop with catchy melodies',
+            'rock': 'rock music with energetic instrumentation',
+            'jazz': 'jazz with complex harmonies and improvisation',
+            'lofi': 'lo-fi beats with a relaxing, chill atmosphere',
+            'ambient': 'ambient soundscapes with minimal instrumentation',
+            'indie pop': 'indie pop with alternative sensibilities',
+            'blues': 'blues with soulful vocals and emotional depth',
+            'country': 'country music with storytelling elements',
+            'synthwave': 'synthwave with electronic and retro influences',
+            'chip tune': 'chip tune music with playful, video game-style sounds',
+        }
+        
+        # Mood-based thematic hint
+        mood_themes = {
+            'happy': 'uplifting and positive themes',
+            'chill': 'relaxed and peaceful atmosphere',
+            'melancholic': 'introspective and emotional themes',
+            'intense': 'high-energy and powerful emotions',
+            'exotic': 'world music influences and cultural themes',
+            'focused': 'concentration and productivity themes',
+            'moody': 'atmospheric and contemplative tones',
+            'relaxed': 'laid-back and soothing qualities',
+            'nostalgic': 'themes of longing and memory',
+            'playful': 'fun and lighthearted character',
+        }
+        
+        artist_style = genre_styles.get(genre, f'{genre} music')
+        thematic_focus = mood_themes.get(mood, f'{mood} mood')
+        
+        return (f"{song_title} – {artist} Description: "
+                f"This song showcases {artist_style} with a {thematic_focus}. "
+                f"The track combines elements of {genre} with a {mood} sensibility, "
+                f"creating an engaging listening experience.")
 
 
 def get_llm_engine(model: Optional[str] = None) -> LLMEngine:
@@ -137,7 +191,7 @@ def get_llm_engine(model: Optional[str] = None) -> LLMEngine:
     - LLM_MODEL: Model name (default: gpt-4)
     
     Note: Requires GitHub Copilot Python SDK to be installed and configured.
-    If SDK is not available, falls back to rule-based explanations.
+    If SDK is not available, falls back to rule-based descriptions.
     """
     model = model or os.getenv("LLM_MODEL", "gpt-4")
     return LLMEngine(model=model)
