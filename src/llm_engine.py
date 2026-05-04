@@ -1,13 +1,15 @@
 """
 LLM Engine for generating personalized music recommendation explanations.
 
-This module handles all interactions with the LLM (via OpenAI API or Copilot's
-managed LLM access) to generate dynamic, contextual explanations for recommendations.
+This module handles all interactions with the LLM via GitHub Copilot CLI
+to generate dynamic, contextual explanations for recommendations.
 """
 
 import os
+import subprocess
+import json
+import sys
 from typing import Optional, Dict, Tuple, List, Any
-from openai import OpenAI, APIError, RateLimitError, APIConnectionError
 from tenacity import retry, stop_after_attempt, wait_exponential
 from .logger import recommender_logger
 
@@ -16,39 +18,40 @@ class LLMEngine:
     """
     Handles LLM interactions for generating personalized recommendation explanations.
     
-    Supports both OpenAI API and Copilot's managed LLM access (via environment config).
+    Uses GitHub Copilot CLI for managed LLM access.
     """
     
     def __init__(
         self,
-        model: str = "gpt-3.5-turbo",
-        api_key: Optional[str] = None,
-        base_url: Optional[str] = None,
+        model: str = "gpt-4",
         max_tokens: int = 200
     ):
         """
         Initialize the LLM engine.
         
         Args:
-            model: LLM model to use (default: gpt-3.5-turbo)
-            api_key: API key (uses OPENAI_API_KEY env var if not provided)
-            base_url: Custom API endpoint (for Copilot or Azure integrations)
+            model: LLM model to use (default: gpt-4)
             max_tokens: Maximum tokens for each LLM response
         """
         self.model = model
         self.max_tokens = max_tokens
         
-        # Determine API configuration
-        api_key = api_key or os.getenv("OPENAI_API_KEY")
-        base_url = base_url or os.getenv("OPENAI_BASE_URL")
+        # Verify Copilot CLI is available
+        try:
+            result = subprocess.run(
+                ["gh", "copilot", "--version"],
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            if result.returncode == 0:
+                recommender_logger.info(f"GitHub Copilot CLI detected: {result.stdout.strip()}")
+            else:
+                recommender_logger.info("GitHub Copilot CLI not available, will use fallback mode")
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            recommender_logger.info("GitHub Copilot CLI not found, will use fallback mode")
         
-        # Initialize OpenAI client
-        kwargs = {"api_key": api_key} if api_key else {}
-        if base_url:
-            kwargs["base_url"] = base_url
-        
-        self.client = OpenAI(**kwargs)
-        recommender_logger.info(f"LLM Engine initialized with model={model}")
+        recommender_logger.info(f"LLM Engine initialized with GitHub Copilot CLI integration, model={model}")
     
     @retry(
         stop=stop_after_attempt(3),
@@ -56,35 +59,39 @@ class LLMEngine:
     )
     def _call_llm(self, prompt: str) -> Tuple[str, Dict[str, int]]:
         """
-        Call the LLM with retry logic.
+        Call the LLM via GitHub Copilot CLI with retry logic.
         
         Returns:
             Tuple of (response_text, token_usage_dict)
         
         Raises:
-            APIError: If the API call fails after retries
+            Exception: If the CLI call fails after retries
         """
         try:
             recommender_logger.log_llm_call_start(
-                prompt_tokens=len(prompt.split()),  # Rough estimate
+                prompt_tokens=len(prompt.split()),
                 model=self.model
             )
             
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are a helpful music recommendation assistant."},
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=self.max_tokens,
-                temperature=0.7
+            # Call GitHub Copilot CLI
+            result = subprocess.run(
+                ["gh", "copilot", "suggest", "-t", "shell"],
+                input=prompt,
+                capture_output=True,
+                text=True,
+                timeout=30
             )
             
-            text = response.choices[0].message.content.strip()
+            if result.returncode != 0:
+                raise RuntimeError(f"Copilot CLI error: {result.stderr}")
+            
+            text = result.stdout.strip()
+            
+            # Estimate tokens (rough approximation)
             tokens = {
-                "prompt_tokens": response.usage.prompt_tokens,
-                "completion_tokens": response.usage.completion_tokens,
-                "total_tokens": response.usage.total_tokens
+                "prompt_tokens": len(prompt.split()),
+                "completion_tokens": len(text.split()),
+                "total_tokens": len(prompt.split()) + len(text.split())
             }
             
             recommender_logger.log_llm_call_end(
@@ -96,18 +103,11 @@ class LLMEngine:
             
             return text, tokens
         
-        except (RateLimitError, APIConnectionError) as e:
+        except Exception as e:
             recommender_logger.log_error(
-                "llm_api_error",
+                "llm_cli_error",
                 str(e),
                 {"model": self.model}
-            )
-            raise
-        except APIError as e:
-            recommender_logger.log_error(
-                "llm_api_error",
-                str(e),
-                {"model": self.model, "error_type": type(e).__name__}
             )
             raise
     
@@ -207,18 +207,14 @@ Explanation:"""
         return f"We picked '{song.get('title', 'Unknown')}' because it {reasons_text}."
 
 
-def get_llm_engine(
-    model: Optional[str] = None,
-    api_key: Optional[str] = None,
-    base_url: Optional[str] = None
-) -> LLMEngine:
+def get_llm_engine(model: Optional[str] = None) -> LLMEngine:
     """
     Factory function to get an LLM engine instance.
     
     Uses environment variables if not explicitly provided:
-    - LLM_MODEL: Model name (default: gpt-3.5-turbo)
-    - OPENAI_API_KEY: OpenAI API key
-    - OPENAI_BASE_URL: Custom API endpoint (e.g., for Copilot or Azure)
+    - LLM_MODEL: Model name (default: gpt-4)
+    
+    Requires GitHub CLI and Copilot CLI to be installed and authenticated.
     """
-    model = model or os.getenv("LLM_MODEL", "gpt-3.5-turbo")
-    return LLMEngine(model=model, api_key=api_key, base_url=base_url)
+    model = model or os.getenv("LLM_MODEL", "gpt-4")
+    return LLMEngine(model=model)

@@ -144,16 +144,16 @@ def test_llm_fallback_with_rag():
 
 
 def test_llm_engine_initialization():
-    """Test that LLM engine can be initialized with dummy key."""
-    engine = LLMEngine(api_key="sk-test-dummy-key")
-    assert engine.model == "gpt-3.5-turbo"
+    """Test that LLM engine can be initialized."""
+    engine = LLMEngine()
+    assert engine.model == "gpt-4"
     assert engine.max_tokens == 200
     print("✓ LLM engine initialization successful")
 
 
 def test_llm_fallback_explanation():
     """Test LLM fallback explanation generation."""
-    engine = LLMEngine(api_key="sk-test-dummy-key")
+    engine = LLMEngine()
     
     song = {
         "title": "Test Song",

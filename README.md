@@ -2,11 +2,11 @@
 
 ## Original Project Context
 
-This project extends the **Music Recommender Simulation** (from Modules 1-3), which scored songs based on user preferences for genre, mood, energy, acousticness, and other audio features using rule-based weighted scoring. The original system ranked candidates by static point totals and returned explanations like "genre match (+2.0); mood match (+1.0)". This advanced version generalizes that pattern by integrating **Retrieval-Augmented Generation (RAG)** with an LLM (OpenAI API) to dynamically generate personalized, natural-language explanations that contextualize why each recommendation matches the user's taste.
+This project extends the **Music Recommender Simulation** (from Modules 1-3), which scored songs based on user preferences for genre, mood, energy, acousticness, and other audio features using rule-based weighted scoring. The original system ranked candidates by static point totals and returned explanations like "genre match (+2.0); mood match (+1.0)". This advanced version generalizes that pattern by integrating **Retrieval-Augmented Generation (RAG)** with GitHub Copilot's managed LLM to dynamically generate personalized, natural-language explanations that contextualize why each recommendation matches the user's taste.
 
 ## Project Summary
 
-BeatBuddy-RAG is a Python music recommendation system that recommends songs from a catalog based on user preferences (genre, mood, energy, tempo, valence, danceability, acousticness) and generates AI-powered explanations via Retrieval-Augmented Generation. The system gracefully falls back to rule-based explanations if the LLM is unavailable, ensuring reliability. It bridges traditional content-based filtering with modern LLM-powered natural language generation.
+BeatBuddy-RAG is a Python music recommendation system that recommends songs from a catalog based on user preferences (genre, mood, energy, tempo, valence, danceability, acousticness) and generates AI-powered explanations via Retrieval-Augmented Generation using GitHub Copilot's managed LLM. The system gracefully falls back to rule-based explanations if the LLM is unavailable, ensuring reliability. It bridges traditional content-based filtering with modern LLM-powered natural language generation.
 
 ## Architecture Overview
 
@@ -16,9 +16,9 @@ BeatBuddy-RAG implements a **three-stage pipeline**:
 
 2. **RAG Context Builder** (`rag_context.py`): Constructs a rich context document from song metadata, user preferences, and scoring reasons. This context is formatted as a structured prompt for the LLM.
 
-3. **LLM Explanation Generator** (`llm_engine.py`): Queries OpenAI API (with 3x retry logic) to generate personalized explanations. Falls back to rule-based explanations if the API is unavailable, disabled, or fails.
+3. **LLM Explanation Generator** (`llm_engine.py`): Calls GitHub Copilot CLI (with 3x retry logic) to generate personalized explanations. Falls back to rule-based explanations if the CLI is unavailable, disabled, or fails.
 
-The `main.py` orchestrator drives the flow: load songs → score → retrieve context → generate explanation → display results.
+The `main.py` orchestrator drives the flow: load songs → score → retrieve context → generate explanation via CLI → display results.
 
 ### Data Flow
 
@@ -43,7 +43,7 @@ User Preferences → Load Songs CSV → Score Each Song (rule-based)
 │   ├── __init__.py
 │   ├── main.py                 # CLI orchestrator
 │   ├── recommender.py          # Core scoring + RAG-enhanced recommendation
-│   ├── llm_engine.py           # OpenAI LLM integration with retry logic
+│   ├── llm_engine.py           # GitHub Copilot CLI integration with retry logic
 │   ├── rag_context.py          # RAG context building utilities
 │   └── logger.py               # Structured JSON logging
 ├── data/
@@ -57,26 +57,29 @@ User Preferences → Load Songs CSV → Score Each Song (rule-based)
 └── model_card.md
 ```
 
-## Setup
+### Setup
 
-### Prerequisites
+#### Prerequisites
 
 - Python 3.8 or higher
 - pip
+- **GitHub CLI** installed and authenticated (for Copilot CLI access)
+  - Install: https://cli.github.com/
+  - Authenticate: `gh auth login`
+  - Enable Copilot CLI: `gh copilot --version`
 
-### Quick Start
+#### Quick Start
 
 1. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **(Optional) Configure LLM for RAG:**
+2. **Verify GitHub Copilot CLI is available:**
    ```bash
-   export OPENAI_API_KEY="sk-..."      # Mac/Linux
-   set OPENAI_API_KEY=sk-...           # Windows
+   gh copilot --version
    ```
-   If no API key is set, the system automatically falls back to rule-based explanations.
+   If Copilot CLI is not available, the system will automatically fall back to rule-based explanations.
 
 3. **Run the app:**
    ```bash
@@ -169,7 +172,7 @@ User Profile:
 **Decision:** Keep the scoring logic simple and interpretable (weighted points) rather than training a ML model.  
 **Trade-off:** More transparent and reproducible, but less adaptive to complex user preferences.
 
-### 3. **OpenAI API Integration with Retry Logic**
+### 3. **GitHub Copilot SDK Integration with Retry Logic**
 **Decision:** Use tenacity library for 3x exponential backoff retries on API failures.  
 **Trade-off:** More resilient to transient failures, but adds latency and complexity.
 
@@ -218,7 +221,7 @@ User Profile:
 
 3. **Logging as a First-Class Concern:** Adding structured JSON logging proved invaluable for debugging LLM integrations. Every LLM call, error, and fallback is now traceable, making the system observable and debuggable.
 
-4. **Trade-offs are Everywhere:** Choosing to keep rule-based scoring simple meant sacrificing adaptive personalization. Choosing to use OpenAI API meant accepting latency and cost. Understanding these trade-offs helped me make intentional decisions rather than just defaulting to the easiest path.
+4. **Trade-offs are Everywhere:** Choosing to keep rule-based scoring simple meant sacrificing adaptive personalization. Choosing to use GitHub Copilot SDK meant accepting latency and API dependencies. Understanding these trade-offs helped me make intentional decisions rather than just defaulting to the easiest path.
 
 **Next Steps (If Extending):**
 - Integrate multiple LLM providers (Azure OpenAI, Anthropic Claude, local models) with a provider abstraction
@@ -231,7 +234,7 @@ User Profile:
 
 **Technical Stack:**
 - Python 3.8+
-- OpenAI API (gpt-3.5-turbo)
+- GitHub Copilot CLI (direct subprocess integration)
 - pandas, pytest, tenacity, pydantic, python-dotenv
 - Structured logging, retry patterns, graceful degradation
 

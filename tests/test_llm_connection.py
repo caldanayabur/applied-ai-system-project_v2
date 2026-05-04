@@ -20,10 +20,10 @@ def test_llm_engine_initialization():
     try:
         engine = get_llm_engine()
         assert engine is not None
-        assert engine.model == "gpt-3.5-turbo"
+        assert engine.model == "gpt-4"
         print("✓ LLM engine initialized successfully")
     except Exception as e:
-        print(f"⚠ LLM initialization skipped (no API key): {type(e).__name__}")
+        print(f"⚠ LLM initialization skipped (Copilot CLI not available): {type(e).__name__}")
 
 
 def test_llm_engine_with_custom_model():
@@ -33,13 +33,13 @@ def test_llm_engine_with_custom_model():
         assert engine.model == "gpt-4"
         print("✓ Custom model initialization successful")
     except Exception as e:
-        print(f"⚠ Custom model initialization skipped (no API key): {type(e).__name__}")
+        print(f"⚠ Custom model initialization skipped (Copilot CLI not available): {type(e).__name__}")
 
 
 def test_llm_fallback_explanation():
     """Test fallback explanation when LLM is unavailable."""
-    # Create engine with dummy API key to avoid initialization error
-    engine = LLMEngine(api_key="sk-test-dummy-key")
+    # Create engine (CLI-based, no API key needed)
+    engine = LLMEngine()
     
     song = {
         "title": "Test Song",
@@ -59,7 +59,7 @@ def test_llm_fallback_explanation():
 
 def test_llm_context_building():
     """Test context building for LLM."""
-    engine = LLMEngine(api_key="sk-test-dummy-key")
+    engine = LLMEngine()
     
     song = {
         "title": "Coffee Shop Stories",
@@ -90,7 +90,7 @@ def test_llm_context_building():
 
 def test_llm_prompt_building():
     """Test prompt building for LLM."""
-    engine = LLMEngine(api_key="sk-test-dummy-key")
+    engine = LLMEngine()
     
     song = {
         "title": "Test Song",
