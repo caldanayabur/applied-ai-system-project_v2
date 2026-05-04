@@ -36,6 +36,78 @@ User Preferences → Load Songs CSV → Score Each Song (rule-based)
                               Output Recommendations
 ```
 
+### System Architecture (Mermaid Diagram)
+
+```mermaid
+graph TB
+    User["👤 User Input<br/>(Preferences)"]
+    
+    subgraph Recommender["🎵 Recommender System"]
+        LoadSongs["Load Songs CSV<br/>(20-song catalog)"]
+        Score["Score Engine<br/>(Rule-based)"]
+        RankFilter["Rank & Filter<br/>(Top-K songs)"]
+    end
+    
+    subgraph RAG["🔍 RAG Pipeline"]
+        Context["Build Context<br/>(Song metadata +<br/>User prefs)"]
+        Prompt["Build Prompt<br/>(Structured text)"]
+    end
+    
+    subgraph LLM["🤖 LLM Layer"]
+        CLI["GitHub Copilot CLI<br/>(gh copilot suggest)"]
+        Fallback["Fallback Handler<br/>(Rule-based text)"]
+    end
+    
+    Logger["📝 Structured Logger<br/>(JSON events)"]
+    Output["📊 Output<br/>(Recommendations +<br/>Explanations)"]
+    
+    User -->|"genre, mood,<br/>energy, etc."| LoadSongs
+    LoadSongs --> Score
+    Score --> RankFilter
+    RankFilter -->|"Top-K with<br/>scores"| Context
+    Context --> Prompt
+    Prompt -->|"Context<br/>+ prompt"| CLI
+    CLI -->|"Success"| Output
+    CLI -->|"Fail"| Fallback
+    Fallback -->|"Rule-based<br/>text"| Output
+    CLI --> Logger
+    Fallback --> Logger
+    
+    style User fill:#e1f5ff
+    style Output fill:#c8e6c9
+    style CLI fill:#fff9c4
+    style Fallback fill:#ffccbc
+    style Logger fill:#f3e5f5
+```
+
+### Reliability & Error Handling (Mermaid Diagram)
+
+```mermaid
+graph TD
+    A["LLM Engine Called<br/>generate_explanation"]
+    
+    A --> B["Build Context<br/>& Prompt"]
+    B --> C["Call CLI<br/>gh copilot suggest"]
+    
+    C --> D{CLI Success?}
+    
+    D -->|Yes| E["Parse Response"]
+    E --> F["Log Success"]
+    F --> G["Return Explanation<br/>+ True"]
+    
+    D -->|No| H["Catch Exception"]
+    H --> I["Log Error"]
+    I --> J["Call _fallback_explanation"]
+    J --> K["Return Rule-based Text<br/>+ False"]
+    
+    G --> L["Display to User"]
+    K --> L
+    
+    style G fill:#c8e6c9
+    style K fill:#ffccbc
+    style L fill:#e1f5ff
+```
+
 ## Folder Structure
 
 ```
