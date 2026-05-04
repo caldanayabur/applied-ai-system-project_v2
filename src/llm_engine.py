@@ -7,17 +7,25 @@ for real songs only. Prevents hallucination by constraining output to widely-kno
 information and avoiding fabricated facts.
 """
 
+import asyncio
 import os
+import re
 from typing import Optional, Dict, Tuple, Any
 from tenacity import retry, stop_after_attempt, wait_exponential
 from .logger import recommender_logger
 
 try:
-    from copilot import CopilotClient, PermissionHandler
+    from copilot import CopilotClient
+    from copilot.session import PermissionRequestResult
     COPILOT_AVAILABLE = True
 except ImportError:
     COPILOT_AVAILABLE = False
     recommender_logger.warning("Copilot SDK not available, will use fallback mode only")
+
+
+def _approve_all_permissions(request: Any, invocation: Dict[str, str]) -> Any:
+    """Approve Copilot permission requests without user interaction."""
+    return PermissionRequestResult(kind="approve-once")
 
 
 class LLMEngine:
@@ -44,6 +52,13 @@ class LLMEngine:
         self.model = model
         self.max_tokens = max_tokens
         self.copilot_available = COPILOT_AVAILABLE
+        self.force_fallback = os.getenv("LLM_FORCE_FALLBACK", "").strip().lower() in {
+            "1",
+            "true",
+            "yes",
+            "on",
+        }
+        self._resolved_model: Optional[str] = None
         
         if COPILOT_AVAILABLE:
             recommender_logger.info(f"LLM Engine initialized with Copilot SDK, model={model}")
@@ -76,18 +91,163 @@ class LLMEngine:
             Format: "<Song Title> – <Artist> Description: <2–3 sentence description>"
             If LLM fails or unavailable, returns rule-based description with success=False
         """
-        # For now, always use fallback since SDK is not properly available
-        # This ensures the system works reliably while we resolve SDK setup
-        fallback_description = self._fallback_description(song_title, artist, metadata)
-        
-        recommender_logger.log_song_description_generated(
-            song_title=song_title,
-            artist=artist,
-            source="fallback",
-            description_length=len(fallback_description)
+        if not self.copilot_available or self.force_fallback:
+            fallback_description = self._fallback_description(song_title, artist, metadata)
+            recommender_logger.log_song_description_generated(
+                song_title=song_title,
+                artist=artist,
+                source="fallback",
+                description_length=len(fallback_description)
+            )
+            return fallback_description, False
+
+        try:
+            description = asyncio.run(
+                self._generate_song_description_async(song_title, artist, metadata)
+            )
+            recommender_logger.log_song_description_generated(
+                song_title=song_title,
+                artist=artist,
+                source="llm",
+                description_length=len(description)
+            )
+            return description, True
+        except Exception as exc:
+            recommender_logger.log_error(
+                "llm_description_generation_failed",
+                str(exc),
+                {"song_title": song_title, "artist": artist, "model": self.model}
+            )
+            fallback_description = self._fallback_description(song_title, artist, metadata)
+            recommender_logger.log_song_description_generated(
+                song_title=song_title,
+                artist=artist,
+                source="fallback",
+                description_length=len(fallback_description)
+            )
+            return fallback_description, False
+
+    async def _generate_song_description_async(
+        self,
+        song_title: str,
+        artist: str,
+        metadata: Dict[str, Any]
+    ) -> str:
+        """Generate a description via the Copilot SDK."""
+        if self.force_fallback:
+            return self._fallback_description(song_title, artist, metadata)
+
+        prompt = self._build_prompt(song_title, artist, metadata)
+        prompt_tokens = len(prompt.split())
+        recommender_logger.log_llm_call_start(prompt_tokens=prompt_tokens, model=self.model)
+
+        description, completion_tokens = await self._request_copilot_description(prompt, song_title, artist)
+        recommender_logger.log_llm_call_end(
+            prompt_tokens=prompt_tokens,
+            completion_tokens=completion_tokens,
+            total_tokens=prompt_tokens + completion_tokens,
+            success=True,
+            error=None,
         )
-        
-        return fallback_description, False
+        return description
+
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=4), reraise=True)
+    async def _request_copilot_description(
+        self,
+        prompt: str,
+        song_title: str,
+        artist: str,
+    ) -> Tuple[str, int]:
+        """Send the prompt to Copilot and normalize the response text."""
+        client = CopilotClient()
+        await client.start()
+        try:
+            model = await self._resolve_model(client)
+            session = await client.create_session(
+                on_permission_request=_approve_all_permissions,
+                model=model,
+                client_name="beatbuddy-music-recommender",
+                streaming=False,
+            )
+            event = await session.send_and_wait(prompt, timeout=60.0)
+        finally:
+            await client.stop()
+
+        response_text = self._extract_response_text(event)
+        if not response_text:
+            raise ValueError("Copilot returned an empty response")
+
+        normalized = self._normalize_response_text(response_text, song_title, artist)
+        completion_tokens = int(getattr(getattr(event, "data", None), "output_tokens", 0) or 0)
+        return normalized, completion_tokens
+
+    async def _resolve_model(self, client: Any) -> str:
+        """Choose a Copilot model that is actually available in this environment."""
+        if self._resolved_model:
+            return self._resolved_model
+
+        requested_model = (self.model or "").strip()
+        available_models = await client.list_models()
+
+        by_id = {getattr(model, "id", "").lower(): getattr(model, "id", "") for model in available_models}
+        by_name = {getattr(model, "name", "").lower(): getattr(model, "id", "") for model in available_models}
+
+        def resolve(candidate: str) -> str:
+            lowered = candidate.lower()
+            return by_id.get(lowered) or by_name.get(lowered) or ""
+
+        preference_order = [
+            requested_model,
+            os.getenv("LLM_MODEL", "").strip(),
+            "gpt-5.4-mini",
+            "gpt-5-mini",
+            "gpt-4.1",
+            "auto",
+        ]
+
+        for candidate in preference_order:
+            if not candidate:
+                continue
+            selected = resolve(candidate)
+            if selected:
+                self._resolved_model = selected
+                if requested_model and selected.lower() != requested_model.lower():
+                    recommender_logger.warning(
+                        f'Copilot model "{requested_model}" is unavailable; using "{selected}" instead.'
+                    )
+                return selected
+
+        if available_models:
+            fallback_model = getattr(available_models[0], "id", requested_model or "auto")
+            self._resolved_model = fallback_model
+            recommender_logger.warning(
+                f'Copilot model "{requested_model or self.model}" is unavailable; using "{fallback_model}" instead.'
+            )
+            return fallback_model
+
+        self._resolved_model = requested_model or "auto"
+        return self._resolved_model
+
+    @staticmethod
+    def _extract_response_text(event: Any) -> str:
+        """Extract plain assistant text from a Copilot session event."""
+        data = getattr(event, "data", None)
+        content = getattr(data, "content", None)
+        if isinstance(content, str):
+            return content.strip()
+        if isinstance(event, str):
+            return event.strip()
+        return ""
+
+    @staticmethod
+    def _normalize_response_text(response_text: str, song_title: str, artist: str) -> str:
+        """Ensure the response matches the expected description format."""
+        cleaned = re.sub(r"\s+", " ", response_text).strip()
+        expected_prefix = f"{song_title} – {artist} Description:"
+        lower_cleaned = cleaned.lower()
+        if lower_cleaned.startswith(song_title.lower()) and "description:" in lower_cleaned:
+            return cleaned
+        return f"{expected_prefix} {cleaned}"
     
     def _build_prompt(
         self,

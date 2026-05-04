@@ -42,7 +42,7 @@ User Preferences → Load Songs CSV → Score Each Song (rule-based)
                               Output Recommendations
 ```
 
-### Reliability & Error Handling (Mermaid Diagram)
+### Mermaid Diagram
 
 ```mermaid
 graph TD
@@ -80,6 +80,7 @@ graph TD
 │   ├── llm_engine.py           # GitHub Copilot CLI integration with retry logic
 │   ├── rag_context.py          # RAG context building utilities
 │   └── logger.py               # Structured JSON logging
+├── assets/                     # static assets (images, thumbnails)
 ├── data/
 │   └── songs.csv               # 20-song catalog with audio features
 ├── tests/
@@ -104,24 +105,36 @@ graph TD
 
 #### Quick Start
 
-1. **Install dependencies:**
+1. **Create and activate a virtual environment** *(first-time setup only — skip if `.venv` already exists):*
+   ```bash
+   python -m venv .venv
+   ```
+   Then activate it:
+   - **Windows (PowerShell):** `.\.venv\Scripts\Activate.ps1`
+   - **macOS/Linux:** `source .venv/bin/activate`
+
+   Your prompt will show `(.venv)` when the environment is active. Re-run the activation command at the start of each new terminal session.
+
+   > The virtual environment must be active whenever you run the app. If it isn't, `python` resolves to your global interpreter, which won't have `github-copilot-sdk` installed, and the system will fall back to rule-based descriptions.
+
+2. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Authenticate with GitHub (if not already done):**
+3. **Authenticate with GitHub (if not already done):**
    ```bash
    # The Copilot SDK will use your default GitHub authentication
    # If you haven't authenticated yet:
    gh auth login
    ```
 
-3. **Run the app:**
+4. **Run the app:**
    ```bash
    python -m src.main
    ```
    - If the Copilot SDK is unavailable, the system automatically falls back to rule-based descriptions
-   - Check logs to see which mode was used (LLM-enhanced or fallback)
+   - Check logs to see which mode was used (`source: "llm"` vs `source: "fallback"`)
    - Note: Use `python -m src.main` (module mode) instead of `python src/main.py` to avoid relative import errors
 
 4. **Run tests:**
@@ -273,15 +286,11 @@ Top recommendations ([LLM Enhanced]):
 **Decision:** Keep the scoring logic simple and interpretable (weighted points) rather than training a ML model.  
 **Trade-off:** More transparent and reproducible, but less adaptive to complex user preferences.
 
-### 3. **GitHub Copilot SDK Integration with Retry Logic**
-**Decision:** Use tenacity library for 3x exponential backoff retries on API failures.  
-**Trade-off:** More resilient to transient failures, but adds latency and complexity.
-
-### 4. **Structured JSON Logging**
+### 3. **Structured JSON Logging**
 **Decision:** Log all events (LLM calls, explanations, errors) as JSON for easy parsing and analysis.  
 **Trade-off:** More verbose, but provides transparency and enables debugging.
 
-### 5. **Fallback to Rule-Based Explanations**
+### 4. **Fallback to Rule-Based Explanations**
 **Decision:** If LLM fails or is unavailable, seamlessly degrade to rule-based explanations.  
 **Trade-off:** Users always get recommendations, but explanations vary in quality.
 
@@ -293,7 +302,6 @@ Top recommendations ([LLM Enhanced]):
 
 - ✅ Song loading and CSV parsing correctly validated metadata
 - ✅ Rule-based scoring is consistent and reproducible
-- ✅ LLM engine initializes and integrates with retry logic
 - ✅ RAG context builder correctly formats song/preference metadata
 - ✅ Fallback mechanism works reliably when LLM unavailable
 - ✅ Recommendation scores remain identical with/without LLM (only explanations change)
@@ -301,11 +309,11 @@ Top recommendations ([LLM Enhanced]):
 
 ### What Didn't Work (and Fixes Applied)
 
-- The LLM was not being given retrieved song context, so the Copilot SDK wasn't providing any novelty in its explanations. I fixed this by using SDK to give more information about the songs it is recommending it and the band/singer that plays it.
+- The LLM was not being given retrieved song context, so the Copilot SDK did not provide novel explanations. I fixed this by using the SDK to include more information about recommended songs.
 
-- I realized that the songs in the csv were not real. I thought I just didn't listen to them before. I replaced them with actual songs so that the LLM can actually give a backstory for them.
+- I realized the songs in the CSV were not real; I replaced them with real songs so the LLM can provide accurate backstories.
 
-### What We Learned
+### What I Learned
 
 - **Graceful degradation is critical** in production AI systems. The system must provide value even when external services fail.
 - **Structured logging is essential** for debugging LLM integrations and understanding system behavior.
@@ -316,9 +324,9 @@ Top recommendations ([LLM Enhanced]):
 
 **What This Project Taught About AI and Problem-Solving:**
 
-1. AI is great to provide more explanatory context. Rather than just providing a list of recommended songs, it can talk about what are they about and some context about the artists.
+1. AI is great to provide more explanatory context. Rather than just providing a list of recommended songs, it can talk about what are they about.
 
-2. Choosing to keep rule-based scoring simple meant sacrificing adaptive personalization. Choosing to use GitHub Copilot SDK meant that I have to spend tokens and manage API calls.
+2. Keeping rule-based scoring simple sacrifices adaptive personalization. Using the GitHub Copilot SDK requires managing token usage and API calls.
 
 **Next Steps (If Extending):**
 - Integrate multiple LLM providers (Azure OpenAI, Anthropic Claude, local models) with a provider abstraction
