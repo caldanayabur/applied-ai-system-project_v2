@@ -9,11 +9,16 @@ You will implement the functions in recommender.py:
 - recommend_songs
 """
 
-from recommender import load_songs, recommend_songs
+import os
+from recommender import load_songs, recommend_songs_with_rag
 
 
 def main() -> None:
-    songs = load_songs("data/songs.csv") 
+    # Get the data path relative to this script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_path = os.path.join(script_dir, "..", "data", "songs.csv")
+    
+    songs = load_songs(data_path)
 
     # Diverse user taste profiles for adversarial/edge-case testing
     user_prefs = [
@@ -48,17 +53,25 @@ def main() -> None:
         print("Profile:")
         for k, v in profile.items():
             print(f"  {k}: {v}")
-        recommendations = recommend_songs(profile, songs, k=5)
-        print("\nTop recommendations:\n")
+        
+        # Try to use RAG-enhanced recommendations, fall back to regular if LLM unavailable
+        try:
+            recommendations = recommend_songs_with_rag(profile, songs, k=5, use_llm=True)
+            rag_status = "[LLM Enhanced]"
+        except Exception as e:
+            # Fallback without LLM
+            from recommender import recommend_songs
+            recommendations = recommend_songs(profile, songs, k=5)
+            rag_status = "[Fallback: No LLM]"
+        
+        print(f"\nTop recommendations ({rag_status}):\n")
         for idx, rec in enumerate(recommendations, 1):
             song, score, explanation = rec
             print("=" * 40)
             print(f"{idx}. Title      : {song['title']}")
             print(f"   Artist     : {song['artist']}")
             print(f"   Score      : {score:.2f}")
-            print("   Reasons    :")
-            for reason in explanation.split(';'):
-                print(f"     - {reason.strip()}")
+            print(f"   Explanation: {explanation}")
         print("=" * 40)
 
 

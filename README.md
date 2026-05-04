@@ -1,12 +1,16 @@
-# 🎵 Music Recommender Simulation
+# 🎵 Music Recommender Simulation with RAG Enhancement
 
 ## Project Summary
 
-This is a simple music recommender for learning. It suggests songs from a small list based on what you like, such as genre, mood, and energy. Songs get points for matching your preferences, and the top ones are recommended with a short reason why. The project shows how basic recommenders work and where they can be limited or biased.
+This is a music recommender system enhanced with **Retrieval-Augmented Generation (RAG)** for learning and experimentation. It suggests songs from a catalog based on user preferences (genre, mood, energy, etc.) and uses an LLM to generate personalized, natural-language explanations for recommendations.
+
+**New RAG Feature:** The system retrieves song metadata and user preferences to provide rich context to an LLM, which then generates unique, contextual explanations instead of static, rule-based reasons. The system gracefully falls back to rule-based explanations if the LLM is unavailable.
 
 ---
 
 ## How The System Works
+
+### Core Recommendation Engine
 
 This recommender scores each song with simple, rule-based points and then returns the top results. There is no Gaussian weighting or learned model.
 
@@ -61,8 +65,37 @@ This system might over-prioritize genre, so it could ignore great songs that mat
 
 ---
 
+## RAG Enhancement (New!)
 
-## Screenshots
+### What is RAG?
+
+**Retrieval-Augmented Generation (RAG)** combines information retrieval with LLM-powered generation. The system:
+
+1. **Retrieves** relevant data (song metadata, user preferences, matching reasons)
+2. **Augments** the LLM prompt with this context
+3. **Generates** personalized explanations using natural language
+
+### How It Works in This Project
+
+For each recommended song, the system:
+1. Builds a RAG context with song features, user preferences, and match analysis
+2. Sends this context to an LLM (OpenAI or compatible API)
+3. The LLM generates a personalized explanation
+4. Falls back to rule-based explanations if LLM unavailable or fails
+
+**Example Output:**
+
+- **Rule-Based:** `genre match (+2.0); mood match (+1.0); energy similarity (+0.42)`
+- **RAG-Enhanced:** `We picked 'Coffee Shop Stories' because it matches your love of jazz and relaxed vibes—the smooth acousticness (0.89) and moderate tempo (90 BPM) create the perfect focus music`
+
+### Benefits
+
+✅ **More Natural:** LLM-generated explanations read like a human recommendation
+✅ **Contextual:** Each explanation is tailored to the specific song and user
+✅ **Reliable:** Falls back gracefully if LLM unavailable
+✅ **Transparent:** All LLM calls are logged for debugging
+
+---
 
 
 Example output from the CLI simulation:
@@ -107,21 +140,45 @@ Prefers jazz, relaxed mood, high valence, moderate tempo, and acoustic music
 pip install -r requirements.txt
 ```
 
-3. Run the app:
+3. **(Optional) Configure LLM for RAG Enhancement**
+
+   To enable LLM-powered explanations, set up your API credentials:
+
+   **Option A: OpenAI API**
+   ```bash
+   export OPENAI_API_KEY="sk-..."      # Mac/Linux
+   set OPENAI_API_KEY=sk-...           # Windows
+   ```
+
+   **Option B: Azure OpenAI or Custom Endpoint**
+   ```bash
+   export OPENAI_API_KEY="..."
+   export OPENAI_BASE_URL="https://..."
+   ```
+
+   If no API key is set, the system falls back to rule-based explanations automatically.
+
+4. Run the app:
 
 ```bash
 python -m src.main
 ```
 
+The output will indicate whether LLM explanations are being generated or using fallback.
+
 ### Running Tests
 
-Run the starter tests with:
-
+Run all tests:
 ```bash
 pytest
 ```
 
-You can add more tests in `tests/test_recommender.py`.
+Run specific test suites:
+```bash
+pytest tests/test_recommender.py          # Original functionality
+pytest tests/test_llm_connection.py       # LLM integration
+pytest tests/test_rag_pipeline.py         # End-to-end RAG pipeline
+```
 
 ---
 

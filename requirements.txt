@@ -1,3 +1,7 @@
 pandas
 pytest
 streamlit
+openai>=1.0.0
+python-dotenv
+pydantic
+tenacity

@@ -131,3 +131,66 @@ def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tup
     scored.sort(key=lambda x: x[1], reverse=True)
     # Return top k
     return scored[:k]
+
+
+def recommend_songs_with_rag(
+    user_prefs: Dict,
+    songs: List[Dict],
+    k: int = 5,
+    use_llm: bool = True
+) -> List[Tuple[Dict, float, str]]:
+    """
+    Recommend top k songs for a user with RAG-enhanced explanations.
+    
+    This function uses the same scoring as recommend_songs() but enhances
+    the explanations using RAG and an LLM for more personalized, natural language.
+    
+    Args:
+        user_prefs: User preference dictionary
+        songs: List of song dictionaries
+        k: Number of recommendations to return
+        use_llm: Whether to use LLM for explanations (True) or fallback (False)
+    
+    Returns:
+        List of (song, score, explanation) tuples
+    """
+    from .llm_engine import get_llm_engine
+    from .rag_context import RAGContextBuilder
+    from .logger import recommender_logger
+    
+    # Get base recommendations with scores
+    recommendations = recommend_songs(user_prefs, songs, k)
+    
+    # Enhance explanations with RAG if LLM is enabled
+    if not use_llm:
+        return recommendations
+    
+    try:
+        llm_engine = get_llm_engine()
+        enhanced_recommendations = []
+        
+        for song, score, base_explanation in recommendations:
+            # Parse the base explanation to get scoring reasons
+            scoring_reasons = [r.strip() for r in base_explanation.split(";")]
+            
+            # Generate LLM-enhanced explanation
+            enhanced_explanation, success = llm_engine.generate_explanation(
+                song=song,
+                user_prefs=user_prefs,
+                score=score,
+                scoring_reasons=scoring_reasons
+            )
+            
+            enhanced_recommendations.append((song, score, enhanced_explanation))
+        
+        return enhanced_recommendations
+    
+    except Exception as e:
+        recommender_logger.log_error(
+            "rag_enhancement_failed",
+            str(e),
+            {"num_songs": len(recommendations), "use_llm": use_llm}
+        )
+        # Fallback to base recommendations
+        return recommendations
+

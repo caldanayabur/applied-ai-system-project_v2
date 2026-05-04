@@ -1,20 +1,28 @@
-# 🎧 Model Card: Music Recommender Simulation
+# 🎧 Model Card: Music Recommender with RAG Enhancement
 
 ## 1. Model Name  
 
-BeatBuddy
+BeatBuddy (enhanced with Retrieval-Augmented Generation)
 
 ---
 
 ## 2. Intended Use  
 
-This recommender is designed for classroom exploration and learning, not for real-world music streaming. It generates song recommendations from a small, fixed catalog based on a user's stated preferences for genre, mood, energy, and other features. The system assumes users know what they like and can specify their favorite genre, mood, and target values for features like tempo or valence. It is not intended for commercial use or for users with highly complex or evolving tastes.
+This recommender is designed for classroom exploration and learning, not for real-world music streaming. It generates song recommendations from a small, fixed catalog based on a user's stated preferences for genre, mood, energy, and other features. The system assumes users know what they like and can specify their favorite genre, mood, and target values for features like tempo or valence. 
+
+**New RAG Feature:** The system now uses an LLM to generate personalized, natural-language explanations for why each song was recommended, moving beyond static rule-based reasons. This makes recommendations feel more human and contextual.
+
+It is not intended for commercial use or for users with highly complex or evolving tastes.
 
 ---
 
 ## 3. How the Model Works  
 
+**Scoring Phase:**
 The model looks at each song's features (like genre, mood, energy, tempo, valence, danceability, and acousticness) and compares them to what the user says they like. If a song matches the user's favorite genre or mood, it gets extra points. The model also checks if the song's numeric features (like tempo or valence) are close to the user's targets, and adds points if they are. For energy, it gives a higher score the closer the song's energy is to the user's target. After scoring all songs, it sorts them and recommends the top ones.
+
+**Explanation Generation Phase (New with RAG):**
+For each recommended song, the system retrieves song metadata and user preferences to build a RAG context. This context is sent to an LLM, which generates a personalized explanation. If the LLM is unavailable or fails, the system gracefully falls back to rule-based explanations.
 
 ---
 
@@ -39,7 +47,18 @@ The model struggles with users whose preferences are outside the range of the da
 
 ## 7. Evaluation
 
-I tested the recommender using three different user profiles: one with impossible preferences (genre and mood not in the dataset, extreme energy), one with contradictory preferences (high acousticness, high energy, high danceability), and one with realistic but specific preferences (jazz, relaxed mood, high valence, moderate tempo, likes acoustic). For each profile, I checked if the top recommendations matched the user's stated preferences and if the explanations made sense. I also experimented with changing the genre weight, adding tempo and valence to the score, and disabling the mood check to see how the results changed. I was surprised that users with extreme or rare preferences always got low scores and generic recommendations, while users with more typical preferences got clear, relevant results. The experiments helped reveal where the model is strong and where it fails to adapt to unusual user needs.
+**Original Recommender:**
+I tested the recommender using three different user profiles: one with impossible preferences (genre and mood not in the dataset, extreme energy), one with contradictory preferences (high acousticness, high energy, high danceability), and one with realistic but specific preferences (jazz, relaxed mood, high valence, moderate tempo, likes acoustic). For each profile, I checked if the top recommendations matched the user's stated preferences and if the explanations made sense. I also experimented with changing the genre weight, adding tempo and valence to the score, and disabling the mood check to see how the results changed.
+
+**RAG Enhancement:**
+I verified that the RAG feature:
+- ✅ Generates unique, contextual explanations for each song and user profile
+- ✅ Preserves recommendation scores (identical to rule-based scoring)
+- ✅ Falls back gracefully when LLM unavailable or fails
+- ✅ Logs all LLM interactions for transparency and debugging
+- ✅ Works with diverse user profiles (extreme, contradictory, and realistic preferences)
+
+I found that LLM explanations make the system feel more helpful and personalized, even though the underlying scores remain unchanged. The fallback mechanism ensures reliability even without an external LLM API.
 
 ---
 
