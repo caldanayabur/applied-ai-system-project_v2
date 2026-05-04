@@ -36,50 +36,6 @@ User Preferences → Load Songs CSV → Score Each Song (rule-based)
                               Output Recommendations
 ```
 
-### System Architecture (Mermaid Diagram)
-
-```mermaid
-graph TB
-    User["👤 User Input<br/>(Preferences)"]
-    
-    subgraph Recommender["🎵 Recommender System"]
-        LoadSongs["Load Songs CSV<br/>(20-song catalog)"]
-        Score["Score Engine<br/>(Rule-based)"]
-        RankFilter["Rank & Filter<br/>(Top-K songs)"]
-    end
-    
-    subgraph RAG["🔍 RAG Pipeline"]
-        Context["Build Context<br/>(Song metadata +<br/>User prefs)"]
-        Prompt["Build Prompt<br/>(Structured text)"]
-    end
-    
-    subgraph LLM["🤖 LLM Layer"]
-        CLI["GitHub Copilot CLI<br/>(gh copilot suggest)"]
-        Fallback["Fallback Handler<br/>(Rule-based text)"]
-    end
-    
-    Logger["📝 Structured Logger<br/>(JSON events)"]
-    Output["📊 Output<br/>(Recommendations +<br/>Explanations)"]
-    
-    User -->|"genre, mood,<br/>energy, etc."| LoadSongs
-    LoadSongs --> Score
-    Score --> RankFilter
-    RankFilter -->|"Top-K with<br/>scores"| Context
-    Context --> Prompt
-    Prompt -->|"Context<br/>+ prompt"| CLI
-    CLI -->|"Success"| Output
-    CLI -->|"Fail"| Fallback
-    Fallback -->|"Rule-based<br/>text"| Output
-    CLI --> Logger
-    Fallback --> Logger
-    
-    style User fill:#e1f5ff
-    style Output fill:#c8e6c9
-    style CLI fill:#fff9c4
-    style Fallback fill:#ffccbc
-    style Logger fill:#f3e5f5
-```
-
 ### Reliability & Error Handling (Mermaid Diagram)
 
 ```mermaid
