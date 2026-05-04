@@ -39,14 +39,14 @@ class LLMEngine:
     
     def __init__(
         self,
-        model: str = "gpt-4",
+        model: str = "gpt-4.1",
         max_tokens: int = 200
     ):
         """
         Initialize the LLM engine.
         
         Args:
-            model: LLM model to use (default: gpt-4)
+            model: LLM model to use (default: gpt-4.1)
             max_tokens: Maximum tokens for each LLM response
         """
         self.model = model
@@ -348,10 +348,10 @@ def get_llm_engine(model: Optional[str] = None) -> LLMEngine:
     Factory function to get an LLM engine instance.
     
     Uses environment variables if not explicitly provided:
-    - LLM_MODEL: Model name (default: gpt-4)
+    - LLM_MODEL: Model name (default: gpt-4.1)
     
     Note: Requires GitHub Copilot Python SDK to be installed and configured.
     If SDK is not available, falls back to rule-based descriptions.
     """
-    model = model or os.getenv("LLM_MODEL", "gpt-4")
+    model = model or os.getenv("LLM_MODEL", "gpt-4.1")
     return LLMEngine(model=model)

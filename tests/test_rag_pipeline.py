@@ -149,7 +149,7 @@ def test_llm_fallback_with_descriptions():
 def test_llm_engine_initialization():
     """Test that LLM engine can be initialized."""
     engine = LLMEngine()
-    assert engine.model == "gpt-4"
+    assert engine.model == "gpt-4.1"
     assert engine.max_tokens == 200
     print("✓ LLM engine initialization successful")
 

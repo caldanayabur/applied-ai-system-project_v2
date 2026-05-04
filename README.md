@@ -159,9 +159,9 @@ Profile:
   favorite_mood: melancholy
   target_energy: 1.5
   likes_acoustic: True
-2026-05-04 17:54:28 - music_recommender - INFO - LLM Engine initialized with Copilot SDK, model=gpt-4
-2026-05-04 17:54:28 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:28.788896+00:00", "event_type": "llm_call_start", "prompt_tokens": 142, "model": "gpt-4"}
-2026-05-04 17:54:31 - music_recommender - WARNING - Copilot model "gpt-4" is unavailable; using "gpt-5.4-mini" instead.
+2026-05-04 17:54:28 - music_recommender - INFO - LLM Engine initialized with Copilot SDK, model=gpt-4.1
+2026-05-04 17:54:28 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:28.788896+00:00", "event_type": "llm_call_start", "prompt_tokens": 142, "model": "gpt-4.1"}
+2026-05-04 17:54:31 - music_recommender - WARNING - Copilot model "gpt-4.1" is unavailable; using "gpt-5.4-mini" instead.
 2026-05-04 17:54:40 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:40.778095+00:00", "event_type": "llm_call_end", "prompt_tokens": 142, "completion_tokens": 160, "total_tokens": 302, "success": true, "error": null}
 2026-05-04 17:54:40 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:40.780106+00:00", "event_type": "song_description_generated", "song_title": "Holy Wars... The Punishment Due", "artist": "Megadeth", "source": "llm", "description_length": 364}
 2026-05-04 17:54:40 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:40.782769+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4"}
@@ -214,21 +214,21 @@ Profile:
   target_danceability: 0.95
   target_acousticness: 0.95
   likes_acoustic: True
-2026-05-04 17:55:23 - music_recommender - INFO - LLM Engine initialized with Copilot SDK, model=gpt-4
-2026-05-04 17:55:23 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:23.232596+00:00", "event_type": "llm_call_start", "prompt_tokens": 138, "model": "gpt-4"}
-2026-05-04 17:55:25 - music_recommender - WARNING - Copilot model "gpt-4" is unavailable; using "gpt-5.4-mini" instead.
+2026-05-04 17:55:23 - music_recommender - INFO - LLM Engine initialized with Copilot SDK, model=gpt-4.1
+2026-05-04 17:55:23 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:23.232596+00:00", "event_type": "llm_call_start", "prompt_tokens": 138, "model": "gpt-4.1"}
+2026-05-04 17:55:25 - music_recommender - WARNING - Copilot model "gpt-4.1" is unavailable; using "gpt-5.4-mini" instead.
 2026-05-04 17:55:33 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:33.122590+00:00", "event_type": "llm_call_end", "prompt_tokens": 138, "completion_tokens": 263, "total_tokens": 401, "success": true, "error": null}
 2026-05-04 17:55:33 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:33.122590+00:00", "event_type": "song_description_generated", "song_title": "Blue Train", "artist": "John Coltrane", "source": "llm", "description_length": 354}
-2026-05-04 17:55:33 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:33.122590+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4"}
+2026-05-04 17:55:33 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:33.122590+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4.1"}
 2026-05-04 17:55:46 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:46.074719+00:00", "event_type": "llm_call_end", "prompt_tokens": 144, "completion_tokens": 208, "total_tokens": 352, "success": true, "error": null}
 2026-05-04 17:55:46 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:46.079289+00:00", "event_type": "song_description_generated", "song_title": "Voodoo People (Pendulum Remix)", "artist": "The Prodigy", "source": "llm", "description_length": 426}
-2026-05-04 17:55:46 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:46.080670+00:00", "event_type": "llm_call_start", "prompt_tokens": 137, "model": "gpt-4"}
+2026-05-04 17:55:46 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:46.080670+00:00", "event_type": "llm_call_start", "prompt_tokens": 137, "model": "gpt-4.1"}
 2026-05-04 17:55:59 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:59.223831+00:00", "event_type": "llm_call_end", "prompt_tokens": 137, "completion_tokens": 332, "total_tokens": 469, "success": true, "error": null}
 2026-05-04 17:55:59 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:59.250235+00:00", "event_type": "song_description_generated", "song_title": "Rainbow Road", "artist": "nanobii", "source": "llm", "description_length": 314}
-2026-05-04 17:55:59 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:59.273058+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4"}
+2026-05-04 17:55:59 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:59.273058+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4.1"}
 2026-05-04 17:56:10 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:10.292726+00:00", "event_type": "llm_call_end", "prompt_tokens": 136, "completion_tokens": 156, "total_tokens": 292, "success": true, "error": null}
 2026-05-04 17:56:10 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:10.292726+00:00", "event_type": "song_description_generated", "song_title": "Bambol\u00e9o", "artist": "Gipsy Kings", "source": "llm", "description_length": 329}
-2026-05-04 17:56:10 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:10.292726+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4"}
+2026-05-04 17:56:10 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:10.292726+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4.1"}
 2026-05-04 17:56:20 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:20.861520+00:00", "event_type": "llm_call_end", "prompt_tokens": 136, "completion_tokens": 131, "total_tokens": 267, "success": true, "error": null}
 2026-05-04 17:56:20 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:20.864720+00:00", "event_type": "song_description_generated", "song_title": "Physical", "artist": "Dua Lipa", "source": "llm", "description_length": 260}
 
@@ -268,21 +268,21 @@ Profile:
   target_valence: 0.7
   target_tempo: 90
   likes_acoustic: True
-2026-05-04 17:56:20 - music_recommender - INFO - LLM Engine initialized with Copilot SDK, model=gpt-4
-2026-05-04 17:56:20 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:20.878647+00:00", "event_type": "llm_call_start", "prompt_tokens": 138, "model": "gpt-4"}
-2026-05-04 17:56:23 - music_recommender - WARNING - Copilot model "gpt-4" is unavailable; using "gpt-5.4-mini" instead.
+2026-05-04 17:56:20 - music_recommender - INFO - LLM Engine initialized with Copilot SDK, model=gpt-4.1
+2026-05-04 17:56:20 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:20.878647+00:00", "event_type": "llm_call_start", "prompt_tokens": 138, "model": "gpt-4.1"}
+2026-05-04 17:56:23 - music_recommender - WARNING - Copilot model "gpt-4.1" is unavailable; using "gpt-5.4-mini" instead.
 2026-05-04 17:56:32 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:32.438637+00:00", "event_type": "llm_call_end", "prompt_tokens": 138, "completion_tokens": 178, "total_tokens": 316, "success": true, "error": null}
 2026-05-04 17:56:32 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:32.440987+00:00", "event_type": "song_description_generated", "song_title": "Blue Train", "artist": "John Coltrane", "source": "llm", "description_length": 361}
-2026-05-04 17:56:32 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:32.440987+00:00", "event_type": "llm_call_start", "prompt_tokens": 134, "model": "gpt-4"}
+2026-05-04 17:56:32 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:32.440987+00:00", "event_type": "llm_call_start", "prompt_tokens": 134, "model": "gpt-4.1"}
 2026-05-04 17:56:43 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:43.107890+00:00", "event_type": "llm_call_end", "prompt_tokens": 134, "completion_tokens": 153, "total_tokens": 287, "success": true, "error": null}
 2026-05-04 17:56:43 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:43.111663+00:00", "event_type": "song_description_generated", "song_title": "Focus", "artist": "H.E.R.", "source": "llm", "description_length": 361}
-2026-05-04 17:56:43 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:43.113549+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4"}
+2026-05-04 17:56:43 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:43.113549+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4.1"}
 2026-05-04 17:56:55 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:55.020369+00:00", "event_type": "llm_call_end", "prompt_tokens": 144, "completion_tokens": 164, "total_tokens": 308, "success": true, "error": null}
 2026-05-04 17:56:55 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:55.020369+00:00", "event_type": "song_description_generated", "song_title": "Take Me Home, Country Roads", "artist": "John Denver", "source": "llm", "description_length": 361}
-2026-05-04 17:56:55 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:55.020369+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4"}
+2026-05-04 17:56:55 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:55.020369+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4.1"}
 2026-05-04 17:57:05 - music_recommender - INFO - {"timestamp": "2026-05-04T21:57:05.933345+00:00", "event_type": "llm_call_end", "prompt_tokens": 144, "completion_tokens": 169, "total_tokens": 313, "success": true, "error": null}
 2026-05-04 17:57:05 - music_recommender - INFO - {"timestamp": "2026-05-04T21:57:05.933345+00:00", "event_type": "song_description_generated", "song_title": "Shut Up and Dance", "artist": "Walk The Moon", "source": "llm", "description_length": 324}
-2026-05-04 17:57:05 - music_recommender - INFO - {"timestamp": "2026-05-04T21:57:05.933345+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4"}
+2026-05-04 17:57:05 - music_recommender - INFO - {"timestamp": "2026-05-04T21:57:05.933345+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4.1"}
 2026-05-04 17:57:15 - music_recommender - INFO - {"timestamp": "2026-05-04T21:57:15.673753+00:00", "event_type": "llm_call_end", "prompt_tokens": 136, "completion_tokens": 162, "total_tokens": 298, "success": true, "error": null}
 2026-05-04 17:57:15 - music_recommender - INFO - {"timestamp": "2026-05-04T21:57:15.673753+00:00", "event_type": "song_description_generated", "song_title": "Weightless", "artist": "Marconi Union", "source": "llm", "description_length": 338}
 
