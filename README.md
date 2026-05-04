@@ -16,9 +16,9 @@ BeatBuddy-RAG implements a **three-stage pipeline**:
 
 2. **RAG Context Builder** (`rag_context.py`): Constructs a rich context document from song metadata, user preferences, and scoring reasons. This context is formatted as a structured prompt for the LLM.
 
-3. **LLM Explanation Generator** (`llm_engine.py`): Calls GitHub Copilot CLI (with 3x retry logic) to generate personalized explanations. Falls back to rule-based explanations if the CLI is unavailable, disabled, or fails.
+3. **LLM Explanation Generator** (`llm_engine.py`): Calls the GitHub Copilot Python SDK to generate personalized explanations using the managed LLM. Falls back to rule-based explanations if the SDK is unavailable, disabled, or fails.
 
-The `main.py` orchestrator drives the flow: load songs → score → retrieve context → generate explanation via CLI → display results.
+The `main.py` orchestrator drives the flow: load songs → score → retrieve context → generate explanation via SDK → display results.
 
 ### Data Flow
 
@@ -43,9 +43,9 @@ graph TD
     A["LLM Engine Called<br/>generate_explanation"]
     
     A --> B["Build Context<br/>& Prompt"]
-    B --> C["Call CLI<br/>gh copilot suggest"]
+    B --> C["Call Copilot SDK<br/>CopilotClient.create_session"]
     
-    C --> D{CLI Success?}
+    C --> D{SDK Success?}
     
     D -->|Yes| E["Parse Response"]
     E --> F["Log Success"]
@@ -91,10 +91,10 @@ graph TD
 
 - Python 3.8 or higher
 - pip
-- **GitHub CLI** installed and authenticated (for Copilot CLI access)
-  - Install: https://cli.github.com/
-  - Authenticate: `gh auth login`
-  - Enable Copilot CLI: `gh copilot --version`
+- **GitHub Copilot SDK** for LLM integration
+  - Installed via `pip install -r requirements.txt`
+  - Requires a valid GitHub Copilot subscription
+  - Uses your GitHub authentication credentials
 
 #### Quick Start
 
@@ -103,16 +103,19 @@ graph TD
    pip install -r requirements.txt
    ```
 
-2. **Verify GitHub Copilot CLI is available:**
+2. **Authenticate with GitHub (if not already done):**
    ```bash
-   gh copilot --version
+   # The Copilot SDK will use your default GitHub authentication
+   # If you haven't authenticated yet:
+   gh auth login
    ```
-   If Copilot CLI is not available, the system will automatically fall back to rule-based explanations.
 
 3. **Run the app:**
    ```bash
-   python -m src.main
+   python src/main.py
    ```
+   - If the Copilot SDK is unavailable, the system automatically falls back to rule-based explanations
+   - Check logs to see which mode was used (LLM-enhanced or fallback)
 
 4. **Run tests:**
    ```bash

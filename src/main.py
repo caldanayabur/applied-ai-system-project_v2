@@ -10,7 +10,13 @@ You will implement the functions in recommender.py:
 """
 
 import os
-from recommender import load_songs, recommend_songs_with_rag
+import sys
+from pathlib import Path
+
+# Add parent directory to path so we can import src modules
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from src.recommender import load_songs, recommend_songs_with_rag
 
 
 def main() -> None:
@@ -60,7 +66,7 @@ def main() -> None:
             rag_status = "[LLM Enhanced]"
         except Exception as e:
             # Fallback without LLM
-            from recommender import recommend_songs
+            from src.recommender import recommend_songs
             recommendations = recommend_songs(profile, songs, k=5)
             rag_status = "[Fallback: No LLM]"
         
