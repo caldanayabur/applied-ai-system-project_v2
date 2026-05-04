@@ -22,7 +22,7 @@ It is not intended for commercial use or for users with highly complex or evolvi
 The model looks at each song's features (like genre, mood, energy, tempo, valence, danceability, and acousticness) and compares them to what the user says they like. If a song matches the user's favorite genre or mood, it gets extra points. The model also checks if the song's numeric features (like tempo or valence) are close to the user's targets, and adds points if they are. For energy, it gives a higher score the closer the song's energy is to the user's target. After scoring all songs, it sorts them and recommends the top ones.
 
 **Explanation Generation Phase (New with RAG):**
-For each recommended song, the system retrieves song metadata and user preferences to build a RAG context. This context is sent to an LLM, which generates a personalized explanation. If the LLM is unavailable or fails, the system gracefully falls back to rule-based explanations.
+For each recommended song, the system retrieves song metadata and user preferences to build a RAG context. This context is sent to GitHub Copilot CLI, which generates a personalized explanation. If the CLI is unavailable or fails, the system gracefully falls back to rule-based explanations.
 
 ---
 
@@ -54,11 +54,11 @@ I tested the recommender using three different user profiles: one with impossibl
 I verified that the RAG feature:
 - ✅ Generates unique, contextual explanations for each song and user profile
 - ✅ Preserves recommendation scores (identical to rule-based scoring)
-- ✅ Falls back gracefully when LLM unavailable or fails
-- ✅ Logs all LLM interactions for transparency and debugging
+- ✅ Falls back gracefully when Copilot CLI unavailable or fails
+- ✅ Logs all CLI interactions for transparency and debugging
 - ✅ Works with diverse user profiles (extreme, contradictory, and realistic preferences)
 
-I found that LLM explanations make the system feel more helpful and personalized, even though the underlying scores remain unchanged. The fallback mechanism ensures reliability even without an external LLM API.
+I found that CLI-generated explanations make the system feel more helpful and personalized, even though the underlying scores remain unchanged. The fallback mechanism ensures reliability even without Copilot CLI access.
 
 ---
 
