@@ -1,112 +1,136 @@
-# 🎧 Model Card: Music Recommender with RAG Enhancement
+# Music Recommender Model Card
 
-## 1. Model Name  
+## 1. Model Name
 
-BeatBuddy (enhanced with Retrieval-Augmented Generation)
-
----
-
-## 2. Intended Use  
-
-This recommender is designed for classroom exploration and learning, not for real-world music streaming. It generates song recommendations from a small, fixed catalog based on a user's stated preferences for genre, mood, energy, and other features. The system assumes users know what they like and can specify their favorite genre, mood, and target values for features like tempo or valence. 
-
-**New RAG Feature:** The system now uses an LLM to generate personalized, natural-language explanations for why each song was recommended, moving beyond static rule-based reasons. This makes recommendations feel more human and contextual.
-
-It is not intended for commercial use or for users with highly complex or evolving tastes.
+BeatBuddy, a rule-based music recommender with optional Copilot-generated song descriptions.
 
 ---
 
-## 3. How the Model Works  
+## 2. Intended Use
 
-**Scoring Phase:**
-The model looks at each song's features (like genre, mood, energy, tempo, valence, danceability, and acousticness) and compares them to what the user says they like. If a song matches the user's favorite genre or mood, it gets extra points. The model also checks if the song's numeric features (like tempo or valence) are close to the user's targets, and adds points if they are. For energy, it gives a higher score the closer the song's energy is to the user's target. After scoring all songs, it sorts them and recommends the top ones.
+This project is designed for classroom exploration and small-scale experimentation, not for production music recommendation.
 
-**Explanation Generation Phase (New with RAG):**
-For each recommended song, the system retrieves song metadata and user preferences to build a RAG context. This context is sent to GitHub Copilot's managed LLM (via Python SDK), which generates a personalized explanation. If the SDK is unavailable or fails, the system gracefully falls back to rule-based explanations.
+The current code recommends songs from a fixed 20-song CSV catalog using interpretable scoring rules. After ranking, it can generate a short natural-language description for each recommended song using GitHub Copilot's managed LLM. If Copilot is unavailable, disabled, or fails, the system falls back to rule-based descriptions and still returns output.
 
----
-
-## 4. Data  
-
-The dataset contains 20 songs, each with features like genre, mood, artist, energy, tempo, valence, danceability, and acousticness. Genres include pop, rock, jazz, lofi, synthwave, and more, with a variety of moods such as happy, intense, relaxed, and chill. No songs were added or removed from the starter set. Some genres and moods are underrepresented, and there are no songs with extremely high or low values for some features. The catalog is small, so it does not cover the full range of musical tastes or diversity found in real music libraries.
+The CLI currently runs three built-in user profiles to exercise edge cases and show the different output paths.
 
 ---
 
-## 5. Strengths  
+## 3. How the System Works
 
-The system works well for users whose preferences match the genres and moods in the dataset. It gives clear, explainable recommendations, and the reasons for each pick are easy to understand. The model is good at finding songs that are close to the user's target energy, tempo, or valence. It is transparent, so users can see exactly why a song was recommended.
+### Data Loading
+
+`load_songs` reads `data/songs.csv` into dictionaries with these fields: `id`, `title`, `artist`, `genre`, `mood`, `energy`, `tempo_bpm`, `valence`, `danceability`, and `acousticness`.
+
+### Scoring
+
+`score_song` compares each song to the user profile and adds points for:
+
+- matching `favorite_genre` (+2.0)
+- matching `favorite_mood` (+1.0)
+- matching `favorite_artist` when provided (+1.0)
+- closeness to `target_tempo` (+1.0)
+- closeness to `target_danceability` (+1.0)
+- closeness to `target_acousticness` (+1.0)
+- closeness to `target_valence` (+1.0)
+- energy similarity computed as `1 - abs(song_energy - target_energy)`
+
+`recommend_songs` ranks songs by total score and returns the top `k` results.
+
+### Description Generation
+
+`recommend_songs_with_descriptions` first computes the same deterministic ranking, then calls `LLMEngine.generate_song_description` for each selected song.
+
+The LLM description path uses song title, artist, and metadata only. It does not use user preferences to write the description, and it does not fetch lyrics from an external corpus. The prompt asks for a brief description of the song's themes and the artist's style, and the engine normalizes the output into a fixed `Title – Artist Description: ...` format.
+
+If the Copilot SDK is not available, or if `LLM_FORCE_FALLBACK=1` is set, the system uses a rule-based description built from genre and mood.
+
+### Supporting Utilities
+
+`rag_context.py` contains formatting helpers for song, user, and match context strings. These helpers are covered by tests, but the current CLI flow does not route through them.
+
+The `Song`, `UserProfile`, and `Recommender` classes remain in `recommender.py` for compatibility with tests and examples, but the functional API is the main implementation used by the CLI.
 
 ---
 
-## 6. Limitations and Bias 
+## 4. Data
 
-The model struggles with users whose preferences are outside the range of the dataset, such as those who want a genre or mood that isn't present, or an energy level higher than any song in the catalog. It can create "filter bubbles" by always recommending songs from the user's favorite genre or mood, ignoring other good matches. The system does not consider lyrics, artist popularity, or user listening history. One weakness found during experiments is that users with extreme or rare preferences (like very high energy) get only low-scoring, generic recommendations, making the system feel unresponsive for them. The model also does not promote diversity or surprise in its recommendations, so users may see the same types of songs repeatedly.
+The catalog contains 20 songs spanning genres such as pop, rock, jazz, lofi, ambient, synthwave, and chip tune. Each song has a small set of audio features rather than lyrics, popularity, or listening-history signals.
+
+The dataset is intentionally small and uneven. That makes it useful for demonstrating explainable scoring, but it also limits coverage of real-world music taste.
 
 ---
 
+## 5. Strengths
+
+The system is easy to reason about because the ranking logic is explicit and reproducible. A user can see why a song was recommended through the score and the logged reasons.
+
+The description layer improves presentation without changing the recommendation order. When Copilot is available, it produces more natural text; when it is not, the fallback still keeps the app usable.
+
+The logging layer is also a strength. It records recommendation requests, scoring completion, LLM calls, generated descriptions, and errors in structured JSON for debugging.
+
+---
+
+## 6. Limitations and Bias
+
+The recommender is only as good as the 20-song catalog. If a user prefers a genre or mood that is not present, the system will still return a nearest match rather than a truly good recommendation.
+
+The score is based on a limited feature set and does not use lyrics, listening history, popularity, or user feedback. That creates bias toward songs that fit the available fields instead of songs that would actually satisfy a real listener.
+
+The optional LLM descriptions can still be generic because they are generated from metadata and widely known facts only. The prompt reduces hallucination risk, but it cannot eliminate it completely.
+
+---
 
 ## 7. Evaluation
 
-**Original Recommender:**
-I tested the recommender using three different user profiles: one with impossible preferences (genre and mood not in the dataset, extreme energy), one with contradictory preferences (high acousticness, high energy, high danceability), and one with realistic but specific preferences (jazz, relaxed mood, high valence, moderate tempo, likes acoustic). For each profile, I checked if the top recommendations matched the user's stated preferences and if the explanations made sense. I also experimented with changing the genre weight, adding tempo and valence to the score, and disabling the mood check to see how the results changed.
+The repository includes 15 tests across three test modules. Those tests verify song loading, rule-based scoring, recommendation ordering, description generation, fallback behavior, prompt construction, and context formatting.
 
-**RAG Enhancement:**
-I verified that the RAG feature:
-- ✅ Generates unique, contextual explanations for each song and user profile
-- ✅ Preserves recommendation scores (identical to rule-based scoring)
-- ✅ Falls back gracefully when Copilot SDK unavailable or fails
-- ✅ Logs all LLM interactions for transparency and debugging
-- ✅ Works with diverse user profiles (extreme, contradictory, and realistic preferences)
+The main behaviors validated by the tests are:
 
-I found that LLM-generated explanations make the system feel more helpful and personalized, even though the underlying scores remain unchanged. The fallback mechanism ensures reliability even without SDK access.
+- recommendation scores stay the same with or without the LLM description layer
+- fallback descriptions are returned when the LLM path is unavailable
+- prompt text includes the required constraints and song metadata
+- the context helper functions format song and user information correctly
+
+The current CLI also serves as a lightweight end-to-end check because it runs three profiles that stress different preference combinations.
 
 ---
 
-## 8. Future Work  
+## 8. Future Work
 
+If this project were extended, the next practical steps would be:
 
-If I extended this project, I would swap out all the songs in the dataset for tracks from my own music library. This would let me test the recommender with my real preferences and see if it can actually give good suggestions. I would also look for ways to add more features, handle more complex or specific user tastes, and improve the diversity of recommendations so users don’t always get the same types of songs.
-
----
-
-## 9. Personal Reflection  
-
-
-Building this recommender showed me how complex real music apps like Spotify must be, since they serve millions of users and use far more features than my simple system. I learned it’s hard to recommend music to people with very specific tastes. For example, users with extreme preferences only got low-scoring, generic results, which made the system feel unhelpful for them. I also realized how much human judgment still matters, because the model can only use the features it has and might miss what really makes a song enjoyable for someone. I was surprised that even a simple scoring system could still feel somewhat personalized. I also found it important to double-check the changes suggested by AI tools, to make sure the code still made sense.
+- integrate the existing context builder into the runtime prompt path
+- add caching for repeated song descriptions
+- expand the catalog with more songs and richer metadata
+- add user feedback so the scoring weights can be tuned
+- build a web interface on top of the current CLI workflow
 
 ---
 
-## 10. Responsible AI Reflection (RAG extension)
+## 9. Personal Reflection
+
+This project shows the value of separating deterministic ranking from generative text. The ranking is easy to verify, while the LLM layer improves the user-facing explanation without affecting the core recommendation order.
+
+It also shows the trade-off between simplicity and personalization. A small, interpretable scoring function is easy to test, but it cannot capture the complexity of real listening behavior.
+
+---
+
+## 10. Responsible AI Reflection
 
 ### What are the limitations or biases in your system?
 
-**Data Bias:** The 20-song catalog is too small to represent the real world of music. With only 1–2 songs per genre, the system is biased toward its own limited library. If a user likes a genre that isn't included, the system will force a "best fit" that might be a terrible match.
+The dataset bias is the biggest limitation. A 20-song catalog cannot represent the range of real music preferences, so the system tends to overfit to the songs it already has.
 
-**Preference Bias:** The system assumes people can describe their taste with numbers (like "0.85 energy"). Most people don't think this way. This creates a bias against users who choose music based on feelings, memories, or current trends rather than technical stats.
+The feature bias is also important. The recommender assumes preferences can be expressed as numbers such as energy or valence, which is not how most people naturally describe music taste.
 
-**Feature Limitations:** We only look at 8 basic audio features. The system ignores lyrics, the singer’s voice, and history. Because of this, it might suggest a heavy metal song to a K-pop fan just because they both have "high energy," even though the styles are completely different.
-
-**Filter Bubble Risk:** Because the system gives extra points for matching the user's favorite genre, it creates a "bubble." Users will keep seeing the same type of music and will never be introduced to new styles that they might actually enjoy.
+The description layer is intentionally constrained, but it still depends on a general-purpose LLM. That means the output can sound confident even when it is only a high-level interpretation.
 
 ### Could your AI be misused, and how would you prevent that?
 
-**Potential Misuse:**
+If the scoring rules or catalog were edited without review, the system could be skewed toward certain songs or artists. The fix is to keep the scoring transparent and the dataset under version control.
 
-- **Manipulating Results:** Someone could change the song data to unfairly promote certain artists or hide others for profit.
-
-- **False Trust:** Users might believe the AI's explanations are "facts," even when the AI is just making up a creative story about why a song matches.
-
-- **Hidden Tracking:** If this system saved every search, it could build a private profile of a user's moods and emotions, which could be used for invasive advertising.
-
-**Prevention Strategies:**
-
-- **Be Clear:** Show the actual math (the score) next to the AI's explanation so the user sees how it works.
-
-- **Use Labels:** Clearly mark descriptions as "AI-generated" so users know they might not be 100% accurate.
-
-- **Check the Logs:** Regularly review system logs to find where the AI is making mistakes or showing bias.
-
-- **Privacy First:** Don't save a user's history or build a personal profile.
+The LLM output should not be treated as factual biography. The prompt and fallback logic help, but the interface should still label descriptions as AI-generated.
 
 ### What surprised you while testing your AI's reliability?
 
