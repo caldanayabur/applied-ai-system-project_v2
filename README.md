@@ -159,23 +159,22 @@ Profile:
   favorite_mood: melancholy
   target_energy: 1.5
   likes_acoustic: True
-2026-05-04 17:54:28 - music_recommender - INFO - LLM Engine initialized with Copilot SDK, model=gpt-4.1
-2026-05-04 17:54:28 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:28.788896+00:00", "event_type": "llm_call_start", "prompt_tokens": 142, "model": "gpt-4.1"}
-2026-05-04 17:54:31 - music_recommender - WARNING - Copilot model "gpt-4.1" is unavailable; using "gpt-5.4-mini" instead.
-2026-05-04 17:54:40 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:40.778095+00:00", "event_type": "llm_call_end", "prompt_tokens": 142, "completion_tokens": 160, "total_tokens": 302, "success": true, "error": null}
-2026-05-04 17:54:40 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:40.780106+00:00", "event_type": "song_description_generated", "song_title": "Holy Wars... The Punishment Due", "artist": "Megadeth", "source": "llm", "description_length": 364}
-2026-05-04 17:54:40 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:40.782769+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4"}
-2026-05-04 17:54:50 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:50.132323+00:00", "event_type": "llm_call_end", "prompt_tokens": 144, "completion_tokens": 243, "total_tokens": 387, "success": true, "error": null}
-2026-05-04 17:54:50 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:50.132942+00:00", "event_type": "song_description_generated", "song_title": "Voodoo People (Pendulum Remix)", "artist": "The Prodigy", "source": "llm", "description_length": 384}
-2026-05-04 17:54:50 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:50.138216+00:00", "event_type": "llm_call_start", "prompt_tokens": 138, "model": "gpt-4"}
-2026-05-04 17:54:59 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:59.762345+00:00", "event_type": "llm_call_end", "prompt_tokens": 138, "completion_tokens": 130, "total_tokens": 268, "success": true, "error": null}
-2026-05-04 17:54:59 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:59.762345+00:00", "event_type": "song_description_generated", "song_title": "Ace of Spades", "artist": "Mot\u00f6rhead", "source": "llm", "description_length": 338}
-2026-05-04 17:54:59 - music_recommender - INFO - {"timestamp": "2026-05-04T21:54:59.762345+00:00", "event_type": "llm_call_start", "prompt_tokens": 137, "model": "gpt-4"}
-2026-05-04 17:55:10 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:10.734920+00:00", "event_type": "llm_call_end", "prompt_tokens": 137, "completion_tokens": 181, "total_tokens": 318, "success": true, "error": null}
-2026-05-04 17:55:10 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:10.737272+00:00", "event_type": "song_description_generated", "song_title": "Rainbow Road", "artist": "nanobii", "source": "llm", "description_length": 324}
-2026-05-04 17:55:10 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:10.738527+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4"}
-2026-05-04 17:55:23 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:23.221563+00:00", "event_type": "llm_call_end", "prompt_tokens": 136, "completion_tokens": 196, "total_tokens": 332, "success": true, "error": null}
-2026-05-04 17:55:23 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:23.221563+00:00", "event_type": "song_description_generated", "song_title": "Bambol\u00e9o", "artist": "Gipsy Kings", "source": "llm", "description_length": 376}
+2026-05-04 19:18:22 - music_recommender - INFO - LLM Engine initialized with Copilot SDK, model=gpt-4.1
+2026-05-04 19:18:22 - music_recommender - INFO - {"timestamp": "2026-05-04T23:18:22.251175+00:00", "event_type": "llm_call_start", "prompt_tokens": 142, "model": "gpt-4.1"}
+2026-05-04 19:18:34 - music_recommender - INFO - {"timestamp": "2026-05-04T23:18:34.946768+00:00", "event_type": "llm_call_end", "prompt_tokens": 142, "completion_tokens": 91, "total_tokens": 233, "success": true, "error": null}
+2026-05-04 19:18:34 - music_recommender - INFO - {"timestamp": "2026-05-04T23:18:34.948787+00:00", "event_type": "song_description_generated", "song_title": "Holy Wars... The Punishment Due", "artist": "Megadeth", "source": "llm", "description_length": 484}
+2026-05-04 19:18:34 - music_recommender - INFO - {"timestamp": "2026-05-04T23:18:34.951382+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4.1"}
+2026-05-04 19:18:45 - music_recommender - INFO - {"timestamp": "2026-05-04T23:18:45.185619+00:00", "event_type": "llm_call_end", "prompt_tokens": 144, "completion_tokens": 94, "total_tokens": 238, "success": true, "error": null}
+2026-05-04 19:18:45 - music_recommender - INFO - {"timestamp": "2026-05-04T23:18:45.188609+00:00", "event_type": "song_description_generated", "song_title": "Voodoo People (Pendulum Remix)", "artist": "The Prodigy", "source": "llm", "description_length": 459}
+2026-05-04 19:18:45 - music_recommender - INFO - {"timestamp": "2026-05-04T23:18:45.191098+00:00", "event_type": "llm_call_start", "prompt_tokens": 138, "model": "gpt-4.1"}
+2026-05-04 19:18:55 - music_recommender - INFO - {"timestamp": "2026-05-04T23:18:55.047497+00:00", "event_type": "llm_call_end", "prompt_tokens": 138, "completion_tokens": 90, "total_tokens": 228, "success": true, "error": null}
+2026-05-04 19:18:55 - music_recommender - INFO - {"timestamp": "2026-05-04T23:18:55.050393+00:00", "event_type": "song_description_generated", "song_title": "Ace of Spades", "artist": "Mot\u00f6rhead", "source": "llm", "description_length": 406}
+2026-05-04 19:18:55 - music_recommender - INFO - {"timestamp": "2026-05-04T23:18:55.052491+00:00", "event_type": "llm_call_start", "prompt_tokens": 137, "model": "gpt-4.1"}
+2026-05-04 19:20:13 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:13.308017+00:00", "event_type": "llm_call_end", "prompt_tokens": 137, "completion_tokens": 80, "total_tokens": 217, "success": true, "error": null}
+2026-05-04 19:20:13 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:13.313555+00:00", "event_type": "song_description_generated", "song_title": "Rainbow Road", "artist": "nanobii", "source": "llm", "description_length": 408}
+2026-05-04 19:20:13 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:13.317565+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4.1"}
+2026-05-04 19:20:24 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:24.598826+00:00", "event_type": "llm_call_end", "prompt_tokens": 136, "completion_tokens": 104, "total_tokens": 240, "success": true, "error": null}
+2026-05-04 19:20:24 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:24.601687+00:00", "event_type": "song_description_generated", "song_title": "Bambol\u00e9o", "artist": "Gipsy Kings", "source": "llm", "description_length": 469}
 
 Top recommendations ([LLM Enhanced]):
 
@@ -183,27 +182,27 @@ Top recommendations ([LLM Enhanced]):
 1. Title      : Holy Wars... The Punishment Due
    Artist     : Megadeth
    Score      : 0.48
-   Description: Holy Wars... The Punishment Due – Megadeth Description: A politically charged thrash metal song that tackles war, religion, and conflict, moving through a tense, aggressive narrative about violence and its consequences. Megadeth’s style is fast, technical, and sharp-edged, with complex guitar work and a confrontational heaviness that defines the band’s identity.
+   Description: Holy Wars... The Punishment Due – Megadeth Description: This song explores themes of conflict, religious strife, and retribution, blending social commentary with a narrative of vengeance. Megadeth delivers these intense subjects through their signature thrash metal style, characterized by fast tempos, aggressive guitar riffs, and complex arrangements. The track’s mood is forceful and urgent, reflecting the band’s reputation for technical musicianship and thought-provoking lyrics.
 ========================================
 2. Title      : Voodoo People (Pendulum Remix)
    Artist     : The Prodigy
    Score      : 0.47
-   Description: Voodoo People (Pendulum Remix) – The Prodigy Description: The song centers on a dark, trance-like atmosphere with themes of ritual, tension, and being pulled into an intense, almost hypnotic force. The Prodigy are known for a fierce, rave-driven electronic sound that mixes breakbeat, big beat, and punk energy, and this remix pushes that identity into fast, aggressive drum and bass.
+   Description: Voodoo People (Pendulum Remix) – The Prodigy Description: This high-energy drum and bass track, remixed by Pendulum, channels themes of chaos, intensity, and the mysterious allure of the unknown. The Prodigy's signature electronic sound is fused with rapid breakbeats and driving basslines, creating an electrifying and danceable atmosphere. The mood is both edgy and invigorating, reflecting the group's reputation for pushing boundaries in electronic music.
 ========================================
 3. Title      : Ace of Spades
    Artist     : Motörhead
    Score      : 0.46
-   Description: Ace of Spades – Motörhead Description: A hard-driving rock song about gambling, risk, and living on the edge, with a reckless, defiant mood and a fast, intense momentum. Motörhead are known for their loud, aggressive blend of heavy rock and punk energy, built around Lemmy Kilmister’s gritty vocals, distorted bass, and relentless rhythm.
+   Description: Ace of Spades – Motörhead Description: "Ace of Spades" by Motörhead is a high-energy rock song that centers on themes of risk-taking, gambling, and living life on the edge. The lyrics evoke the thrill and danger of chance, reflecting a rebellious and intense attitude. Motörhead’s signature sound combines fast-paced rhythms, gritty vocals, and powerful guitar riffs, embodying the raw spirit of hard rock.
 ========================================
 4. Title      : Rainbow Road
    Artist     : nanobii
    Score      : 0.42
-   Description: Rainbow Road – nanobii Description: “Rainbow Road” is a bright, fast-paced chiptune track that evokes a sense of playful movement, speed, and colorful arcade-like energy. nanobii is known for upbeat, melodic electronic music with a retro game-inspired sound, and this song fits that style with its sparkling, danceable feel.
+   Description: Rainbow Road – nanobii Description: "Rainbow Road" by nanobii is an energetic chiptune track characterized by its playful, uplifting mood and fast tempo. The song evokes themes of adventure and nostalgia, drawing inspiration from video game aesthetics and carefree journeys. Nanobii's signature style blends bright, melodic synths with high-energy rhythms, creating a vibrant and joyful listening experience.
 ========================================
 5. Title      : Bamboléo
    Artist     : Gipsy Kings
    Score      : 0.41
-   Description: Bamboléo – Gipsy Kings Description: "Bamboléo" is an upbeat, dance-driven song centered on themes of love, longing, and celebration, with a lively, communal feel that makes it a favorite for festive settings. Gipsy Kings are known for their energetic blend of flamenco, rumba, Latin pop, and Spanish guitar, with strong rhythmic acoustic instrumentation and passionate vocals.
+   Description: Bamboléo – Gipsy Kings Description: "Bamboléo" by Gipsy Kings is an upbeat, festive song that celebrates the joy and passion of life, with lyrics expressing themes of movement, freedom, and emotional exuberance. The Gipsy Kings are known for their energetic blend of traditional flamenco, rumba, and pop influences, characterized by lively guitar rhythms and vibrant vocals. The song’s spirited mood and danceable rhythm make it a staple of their signature Latin style.
 ========================================
 
 ############ User Profile 2 ############
@@ -214,23 +213,22 @@ Profile:
   target_danceability: 0.95
   target_acousticness: 0.95
   likes_acoustic: True
-2026-05-04 17:55:23 - music_recommender - INFO - LLM Engine initialized with Copilot SDK, model=gpt-4.1
-2026-05-04 17:55:23 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:23.232596+00:00", "event_type": "llm_call_start", "prompt_tokens": 138, "model": "gpt-4.1"}
-2026-05-04 17:55:25 - music_recommender - WARNING - Copilot model "gpt-4.1" is unavailable; using "gpt-5.4-mini" instead.
-2026-05-04 17:55:33 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:33.122590+00:00", "event_type": "llm_call_end", "prompt_tokens": 138, "completion_tokens": 263, "total_tokens": 401, "success": true, "error": null}
-2026-05-04 17:55:33 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:33.122590+00:00", "event_type": "song_description_generated", "song_title": "Blue Train", "artist": "John Coltrane", "source": "llm", "description_length": 354}
-2026-05-04 17:55:33 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:33.122590+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4.1"}
-2026-05-04 17:55:46 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:46.074719+00:00", "event_type": "llm_call_end", "prompt_tokens": 144, "completion_tokens": 208, "total_tokens": 352, "success": true, "error": null}
-2026-05-04 17:55:46 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:46.079289+00:00", "event_type": "song_description_generated", "song_title": "Voodoo People (Pendulum Remix)", "artist": "The Prodigy", "source": "llm", "description_length": 426}
-2026-05-04 17:55:46 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:46.080670+00:00", "event_type": "llm_call_start", "prompt_tokens": 137, "model": "gpt-4.1"}
-2026-05-04 17:55:59 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:59.223831+00:00", "event_type": "llm_call_end", "prompt_tokens": 137, "completion_tokens": 332, "total_tokens": 469, "success": true, "error": null}
-2026-05-04 17:55:59 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:59.250235+00:00", "event_type": "song_description_generated", "song_title": "Rainbow Road", "artist": "nanobii", "source": "llm", "description_length": 314}
-2026-05-04 17:55:59 - music_recommender - INFO - {"timestamp": "2026-05-04T21:55:59.273058+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4.1"}
-2026-05-04 17:56:10 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:10.292726+00:00", "event_type": "llm_call_end", "prompt_tokens": 136, "completion_tokens": 156, "total_tokens": 292, "success": true, "error": null}
-2026-05-04 17:56:10 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:10.292726+00:00", "event_type": "song_description_generated", "song_title": "Bambol\u00e9o", "artist": "Gipsy Kings", "source": "llm", "description_length": 329}
-2026-05-04 17:56:10 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:10.292726+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4.1"}
-2026-05-04 17:56:20 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:20.861520+00:00", "event_type": "llm_call_end", "prompt_tokens": 136, "completion_tokens": 131, "total_tokens": 267, "success": true, "error": null}
-2026-05-04 17:56:20 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:20.864720+00:00", "event_type": "song_description_generated", "song_title": "Physical", "artist": "Dua Lipa", "source": "llm", "description_length": 260}
+2026-05-04 19:20:24 - music_recommender - INFO - LLM Engine initialized with Copilot SDK, model=gpt-4.1
+2026-05-04 19:20:24 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:24.613409+00:00", "event_type": "llm_call_start", "prompt_tokens": 138, "model": "gpt-4.1"}
+2026-05-04 19:20:33 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:33.985003+00:00", "event_type": "llm_call_end", "prompt_tokens": 138, "completion_tokens": 87, "total_tokens": 225, "success": true, "error": null}
+2026-05-04 19:20:33 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:33.988934+00:00", "event_type": "song_description_generated", "song_title": "Blue Train", "artist": "John Coltrane", "source": "llm", "description_length": 453}
+2026-05-04 19:20:33 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:33.991976+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4.1"}
+2026-05-04 19:20:45 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:45.332604+00:00", "event_type": "llm_call_end", "prompt_tokens": 144, "completion_tokens": 95, "total_tokens": 239, "success": true, "error": null}
+2026-05-04 19:20:45 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:45.334605+00:00", "event_type": "song_description_generated", "song_title": "Voodoo People (Pendulum Remix)", "artist": "The Prodigy", "source": "llm", "description_length": 478}
+2026-05-04 19:20:45 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:45.336850+00:00", "event_type": "llm_call_start", "prompt_tokens": 137, "model": "gpt-4.1"}
+2026-05-04 19:20:55 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:55.288165+00:00", "event_type": "llm_call_end", "prompt_tokens": 137, "completion_tokens": 93, "total_tokens": 230, "success": true, "error": null}
+2026-05-04 19:20:55 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:55.291945+00:00", "event_type": "song_description_generated", "song_title": "Rainbow Road", "artist": "nanobii", "source": "llm", "description_length": 483}
+2026-05-04 19:20:55 - music_recommender - INFO - {"timestamp": "2026-05-04T23:20:55.293018+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4.1"}
+2026-05-04 19:21:08 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:08.805313+00:00", "event_type": "llm_call_end", "prompt_tokens": 136, "completion_tokens": 100, "total_tokens": 236, "success": true, "error": null}
+2026-05-04 19:21:08 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:08.809071+00:00", "event_type": "song_description_generated", "song_title": "Bamboléo", "artist": "Gipsy Kings", "source": "llm", "description_length": 458}
+2026-05-04 19:21:08 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:08.811149+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4.1"}
+2026-05-04 19:21:19 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:19.381912+00:00", "event_type": "llm_call_end", "prompt_tokens": 136, "completion_tokens": 86, "total_tokens": 222, "success": true, "error": null}
+2026-05-04 19:21:19 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:19.381912+00:00", "event_type": "song_description_generated", "song_title": "Physical", "artist": "Dua Lipa", "source": "llm", "description_length": 443}
 
 Top recommendations ([LLM Enhanced]):
 
@@ -238,27 +236,27 @@ Top recommendations ([LLM Enhanced]):
 1. Title      : Blue Train
    Artist     : John Coltrane
    Score      : 4.47
-   Description: Blue Train – John Coltrane Description: As an instrumental jazz piece, it does not tell a lyrical story, but it conveys a cool, blues-inflected mood centered on improvisation and ensemble interplay. John Coltrane was an influential jazz saxophonist and composer known for his distinctive tone, advanced improvisation, and exploratory approach to harmony.
+   Description: Blue Train – John Coltrane Description: "Blue Train" is a jazz composition by John Coltrane that evokes themes of journey, reflection, and emotional depth, often interpreted as capturing the feeling of a train ride through blues-inspired landscapes. The piece features Coltrane's signature expressive saxophone playing, blending soulful melodies with intricate improvisation, and is celebrated for its relaxed yet dynamic mood within the hard bop style.
 ========================================
 2. Title      : Voodoo People (Pendulum Remix)
    Artist     : The Prodigy
    Score      : 1.98
-   Description: Voodoo People (Pendulum Remix) – The Prodigy Description: The song centers on a dark, hypnotic atmosphere built around mystical and confrontational imagery, with a tense, high-energy mood rather than a detailed story. The Prodigy are known for their aggressive, rave-rooted electronic sound that blends breakbeat, punk attitude, and hard-edged dance music, and this remix pushes that intensity into a fast drum and bass style.
+   Description: Voodoo People (Pendulum Remix) – The Prodigy Description: This remix infuses The Prodigy's original track with Pendulum's signature high-energy drum and bass style, creating an intense and driving atmosphere. The lyrics evoke themes of mystique and rebelliousness, matching the song's pulsating rhythms and electrifying mood. The result is a dynamic blend of electronic aggression and dancefloor appeal, characteristic of both artists' innovative approaches to electronic music.
 ========================================
 3. Title      : Rainbow Road
    Artist     : nanobii
    Score      : 1.97
-   Description: Rainbow Road – nanobii Description: A bright, fast-moving chiptune-style track that leans into a playful, game-like mood and a sense of colorful momentum rather than a detailed story. nanobii is known for upbeat, melodic electronic music that blends chiptune and dance influences with a polished, high-energy feel.
+   Description: Rainbow Road – nanobii Description: "Rainbow Road" by nanobii is an upbeat chiptune track that evokes a sense of playful adventure and nostalgia, drawing inspiration from video game aesthetics. The song's energetic tempo and bright melodies create a joyful, carefree atmosphere, celebrating themes of fun and imagination. Nanobii is known for blending high-energy electronic sounds with whimsical, game-inspired elements, making this track a vibrant example of their signature style.
 ========================================
 4. Title      : Bamboléo
    Artist     : Gipsy Kings
    Score      : 1.96
-   Description: Bamboléo – Gipsy Kings Description: “Bamboléo” is a lively, celebratory song centered on love, longing, and the pull of danceable rhythm, with a bright, festive mood. Gipsy Kings are known for their flamenco-influenced rumba style, blending Spanish and Latin rhythms with acoustic guitars, hand percussion, and passionate vocals.
+   Description: Bamboléo – Gipsy Kings Description: "Bamboléo" by Gipsy Kings is an upbeat, festive song that celebrates the joy and freedom of dancing and living in the moment. The lyrics evoke themes of movement, passion, and letting go, set against a lively backdrop of flamenco-inspired rhythms and vibrant guitar work. The Gipsy Kings are known for blending traditional Spanish and Romani musical elements with pop influences, creating an energetic and danceable sound.
 ========================================
 5. Title      : Physical
    Artist     : Dua Lipa
    Score      : 1.94
-   Description: Physical – Dua Lipa Description: A high-energy pop song about intense attraction, desire, and the rush of a relationship that feels all-consuming. It reflects Dua Lipa’s sleek, modern dance-pop style, with a bold, upbeat sound and a confident, club-ready mood.
+   Description: Physical – Dua Lipa Description: "Physical" by Dua Lipa is an energetic pop track that channels themes of passion, intensity, and the exhilaration of being fully present in the moment with someone. The song features a driving beat and bold production, reflecting Dua Lipa's signature blend of modern pop with retro influences. Its mood is vibrant and urgent, encouraging listeners to embrace the excitement of physical connection and movement.
 ========================================
 
 ############ User Profile 3 ############
@@ -268,23 +266,22 @@ Profile:
   target_valence: 0.7
   target_tempo: 90
   likes_acoustic: True
-2026-05-04 17:56:20 - music_recommender - INFO - LLM Engine initialized with Copilot SDK, model=gpt-4.1
-2026-05-04 17:56:20 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:20.878647+00:00", "event_type": "llm_call_start", "prompt_tokens": 138, "model": "gpt-4.1"}
-2026-05-04 17:56:23 - music_recommender - WARNING - Copilot model "gpt-4.1" is unavailable; using "gpt-5.4-mini" instead.
-2026-05-04 17:56:32 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:32.438637+00:00", "event_type": "llm_call_end", "prompt_tokens": 138, "completion_tokens": 178, "total_tokens": 316, "success": true, "error": null}
-2026-05-04 17:56:32 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:32.440987+00:00", "event_type": "song_description_generated", "song_title": "Blue Train", "artist": "John Coltrane", "source": "llm", "description_length": 361}
-2026-05-04 17:56:32 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:32.440987+00:00", "event_type": "llm_call_start", "prompt_tokens": 134, "model": "gpt-4.1"}
-2026-05-04 17:56:43 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:43.107890+00:00", "event_type": "llm_call_end", "prompt_tokens": 134, "completion_tokens": 153, "total_tokens": 287, "success": true, "error": null}
-2026-05-04 17:56:43 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:43.111663+00:00", "event_type": "song_description_generated", "song_title": "Focus", "artist": "H.E.R.", "source": "llm", "description_length": 361}
-2026-05-04 17:56:43 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:43.113549+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4.1"}
-2026-05-04 17:56:55 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:55.020369+00:00", "event_type": "llm_call_end", "prompt_tokens": 144, "completion_tokens": 164, "total_tokens": 308, "success": true, "error": null}
-2026-05-04 17:56:55 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:55.020369+00:00", "event_type": "song_description_generated", "song_title": "Take Me Home, Country Roads", "artist": "John Denver", "source": "llm", "description_length": 361}
-2026-05-04 17:56:55 - music_recommender - INFO - {"timestamp": "2026-05-04T21:56:55.020369+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4.1"}
-2026-05-04 17:57:05 - music_recommender - INFO - {"timestamp": "2026-05-04T21:57:05.933345+00:00", "event_type": "llm_call_end", "prompt_tokens": 144, "completion_tokens": 169, "total_tokens": 313, "success": true, "error": null}
-2026-05-04 17:57:05 - music_recommender - INFO - {"timestamp": "2026-05-04T21:57:05.933345+00:00", "event_type": "song_description_generated", "song_title": "Shut Up and Dance", "artist": "Walk The Moon", "source": "llm", "description_length": 324}
-2026-05-04 17:57:05 - music_recommender - INFO - {"timestamp": "2026-05-04T21:57:05.933345+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4.1"}
-2026-05-04 17:57:15 - music_recommender - INFO - {"timestamp": "2026-05-04T21:57:15.673753+00:00", "event_type": "llm_call_end", "prompt_tokens": 136, "completion_tokens": 162, "total_tokens": 298, "success": true, "error": null}
-2026-05-04 17:57:15 - music_recommender - INFO - {"timestamp": "2026-05-04T21:57:15.673753+00:00", "event_type": "song_description_generated", "song_title": "Weightless", "artist": "Marconi Union", "source": "llm", "description_length": 338}
+2026-05-04 19:21:19 - music_recommender - INFO - LLM Engine initialized with Copilot SDK, model=gpt-4.1
+2026-05-04 19:21:19 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:19.392045+00:00", "event_type": "llm_call_start", "prompt_tokens": 138, "model": "gpt-4.1"}
+2026-05-04 19:21:29 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:29.456133+00:00", "event_type": "llm_call_end", "prompt_tokens": 138, "completion_tokens": 94, "total_tokens": 232, "success": true, "error": null}
+2026-05-04 19:21:29 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:29.458701+00:00", "event_type": "song_description_generated", "song_title": "Blue Train", "artist": "John Coltrane", "source": "llm", "description_length": 491}
+2026-05-04 19:21:29 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:29.460681+00:00", "event_type": "llm_call_start", "prompt_tokens": 134, "model": "gpt-4.1"}
+2026-05-04 19:21:40 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:40.749517+00:00", "event_type": "llm_call_end", "prompt_tokens": 134, "completion_tokens": 85, "total_tokens": 219, "success": true, "error": null}
+2026-05-04 19:21:40 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:40.766086+00:00", "event_type": "song_description_generated", "song_title": "Focus", "artist": "H.E.R.", "source": "llm", "description_length": 422}
+2026-05-04 19:21:40 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:40.774486+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4.1"}
+2026-05-04 19:21:50 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:50.779274+00:00", "event_type": "llm_call_end", "prompt_tokens": 144, "completion_tokens": 80, "total_tokens": 224, "success": true, "error": null}
+2026-05-04 19:21:50 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:50.781993+00:00", "event_type": "song_description_generated", "song_title": "Take Me Home, Country Roads", "artist": "John Denver", "source": "llm", "description_length": 427}
+2026-05-04 19:21:50 - music_recommender - INFO - {"timestamp": "2026-05-04T23:21:50.784662+00:00", "event_type": "llm_call_start", "prompt_tokens": 144, "model": "gpt-4.1"}
+2026-05-04 19:22:00 - music_recommender - INFO - {"timestamp": "2026-05-04T23:22:00.283507+00:00", "event_type": "llm_call_end", "prompt_tokens": 144, "completion_tokens": 96, "total_tokens": 240, "success": true, "error": null}
+2026-05-04 19:22:00 - music_recommender - INFO - {"timestamp": "2026-05-04T23:22:00.285656+00:00", "event_type": "song_description_generated", "song_title": "Shut Up and Dance", "artist": "Walk The Moon", "source": "llm", "description_length": 458}
+2026-05-04 19:22:00 - music_recommender - INFO - {"timestamp": "2026-05-04T23:22:00.288918+00:00", "event_type": "llm_call_start", "prompt_tokens": 136, "model": "gpt-4.1"}
+2026-05-04 19:22:11 - music_recommender - INFO - {"timestamp": "2026-05-04T23:22:11.333535+00:00", "event_type": "llm_call_end", "prompt_tokens": 136, "completion_tokens": 97, "total_tokens": 233, "success": true, "error": null}
+2026-05-04 19:22:11 - music_recommender - INFO - {"timestamp": "2026-05-04T23:22:11.337293+00:00", "event_type": "song_description_generated", "song_title": "Weightless", "artist": "Marconi Union", "source": "llm", "description_length": 530}
 
 Top recommendations ([LLM Enhanced]):
 
@@ -292,27 +289,27 @@ Top recommendations ([LLM Enhanced]):
 1. Title      : Blue Train
    Artist     : John Coltrane
    Score      : 5.00
-   Description: Blue Train – John Coltrane Description: An instrumental jazz piece with a cool, blues-inflected feel, "Blue Train" is known for its steady groove, lyrical horn lines, and relaxed but focused mood. John Coltrane’s style combines expressive improvisation, strong harmonic drive, and a clear identity as one of jazz’s most influential saxophonists and bandleaders.
+   Description: Blue Train – John Coltrane Description: "Blue Train" is a jazz composition by John Coltrane that evokes a contemplative and soulful mood, often interpreted as a musical journey or reflection on life's transitions. The piece is characterized by Coltrane's expressive saxophone playing and intricate improvisation, blending blues influences with sophisticated harmonies. Coltrane's style on this track showcases his innovative approach to jazz, marked by emotional depth and technical mastery.
 ========================================
 2. Title      : Focus
    Artist     : H.E.R.
    Score      : 2.00
-   Description: Focus – H.E.R. Description: “Focus” is a restrained R&B ballad about wanting a partner’s full attention and emotional presence, with lyrics centered on longing, vulnerability, and the tension of feeling overlooked. H.E.R. is known for a smooth, soulful sound that blends contemporary R&B with intimate, understated production and emotionally direct songwriting.
+   Description: Focus – H.E.R. Description: "Focus" by H.E.R. is a smooth, introspective track that explores themes of longing for attention and emotional connection in a relationship. The song features H.E.R.'s signature soulful vocals layered over mellow, lofi-inspired production, creating a contemplative and intimate mood. Her musical style blends elements of R&B and contemporary soul, emphasizing vulnerability and nuanced emotion.
 ========================================
 3. Title      : Take Me Home, Country Roads
    Artist     : John Denver
    Score      : 2.00
-   Description: Take Me Home, Country Roads – John Denver Description: A nostalgic country-folk song about longing for home and the comfort of familiar landscapes, with imagery centered on rural roads, mountains, and a deep sense of place. John Denver is known for his warm, acoustic style and gentle vocal delivery, blending country and folk into an inviting, heartfelt sound.
+   Description: Take Me Home, Country Roads – John Denver Description: This song evokes a sense of longing and nostalgia, painting a vivid picture of rural landscapes and the comfort of returning home. John Denver’s warm vocals and signature country style create a heartfelt tribute to the beauty and simplicity of country life. The track’s gentle melody and reflective mood have made it an enduring classic in American folk and country music.
 ========================================
 4. Title      : Shut Up and Dance
    Artist     : Walk The Moon
    Score      : 1.00
-   Description: Shut Up and Dance – Walk The Moon Description: "Shut Up and Dance" is an upbeat pop song about being swept up in a spontaneous night of dancing and attraction, with a carefree, celebratory mood. Walk The Moon are known for bright, anthemic pop-rock with catchy hooks, energetic rhythms, and a polished indie-pop sensibility.
+   Description: Shut Up and Dance – Walk The Moon Description: "Shut Up and Dance" by Walk The Moon is an upbeat pop song that captures the excitement and spontaneity of meeting someone on the dance floor and letting go of inhibitions. The lyrics center around themes of youthful freedom, joy, and living in the moment. Walk The Moon is known for their energetic, dance-friendly sound and catchy melodies, which are reflected in this track's lively tempo and uplifting mood.
 ========================================
 5. Title      : Weightless
    Artist     : Marconi Union
    Score      : 1.00
-   Description: Weightless – Marconi Union Description: An instrumental piece, “Weightless” doesn’t tell a lyrical story; instead, it creates a slow, drifting atmosphere that feels calm, spacious, and reflective. Marconi Union are known for understated electronic ambient music that blends soft textures, gentle rhythms, and a restrained, immersive mood.
+   Description: Weightless – Marconi Union Description: "Weightless" by Marconi Union is an ambient track designed to evoke a sense of calm and relaxation, with a focus on soothing soundscapes and gentle rhythms. The song does not feature traditional lyrics, instead using atmospheric textures and minimalist melodies to create a tranquil, meditative mood. Marconi Union is known for their innovative approach to ambient and electronic music, often blending subtle electronic elements with organic sounds to craft immersive listening experiences.
 ========================================
 ```
 

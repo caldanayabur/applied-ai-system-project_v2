@@ -79,6 +79,8 @@ The score is based on a limited feature set and does not use lyrics, listening h
 
 The optional LLM descriptions can still be generic because they are generated from metadata and widely known facts only. The prompt reduces hallucination risk, but it cannot eliminate it completely.
 
+Also, if you try running the system with the default model (GPT-4.1), it will take a very long time to generate each description. This can make the user experience slow and frustrating.
+
 ---
 
 ## 7. Evaluation
