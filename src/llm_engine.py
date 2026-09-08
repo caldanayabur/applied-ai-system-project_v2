@@ -69,7 +69,8 @@ class LLMEngine:
         self,
         song_title: str,
         artist: str,
-        metadata: Dict[str, Any]
+        metadata: Dict[str, Any],
+        rag_context: Optional[str] = None,
     ) -> Tuple[str, bool]:
         """
         Generate a description of a song's lyrical themes and artist style.
@@ -85,6 +86,7 @@ class LLMEngine:
             song_title: Title of the song (e.g., "Shut Up and Dance")
             artist: Artist or band name (e.g., "Walk The Moon")
             metadata: Dictionary with dataset fields (genre, mood, energy, tempo_bpm, etc.)
+            rag_context: Optional retrieved context with song, preference, and match details
         
         Returns:
             Tuple of (description_text, success_flag)
@@ -103,7 +105,7 @@ class LLMEngine:
 
         try:
             description = asyncio.run(
-                self._generate_song_description_async(song_title, artist, metadata)
+                self._generate_song_description_async(song_title, artist, metadata, rag_context)
             )
             recommender_logger.log_song_description_generated(
                 song_title=song_title,
@@ -131,13 +133,14 @@ class LLMEngine:
         self,
         song_title: str,
         artist: str,
-        metadata: Dict[str, Any]
+        metadata: Dict[str, Any],
+        rag_context: Optional[str] = None,
     ) -> str:
         """Generate a description via the Copilot SDK."""
         if self.force_fallback:
             return self._fallback_description(song_title, artist, metadata)
 
-        prompt = self._build_prompt(song_title, artist, metadata)
+        prompt = self._build_prompt(song_title, artist, metadata, rag_context)
         prompt_tokens = len(prompt.split())
         recommender_logger.log_llm_call_start(prompt_tokens=prompt_tokens, model=self.model)
 
@@ -253,7 +256,8 @@ class LLMEngine:
         self,
         song_title: str,
         artist: str,
-        metadata: Dict[str, Any]
+        metadata: Dict[str, Any],
+        rag_context: Optional[str] = None,
     ) -> str:
         """
         Build a constrained prompt for the LLM to generate song descriptions.
@@ -285,6 +289,11 @@ STRICT CONSTRAINTS:
 
 Song Metadata:
 {metadata_str}
+
+Retrieved Context:
+{rag_context or 'No additional retrieved context.'}
+
+Use the retrieved context to understand the song and recommendation match, but do not mention user preferences, match scores, or the retrieval process in your description.
 
 Output format (must match exactly):
 {song_title} – {artist} Description: [Your 2-3 sentence description here]"""

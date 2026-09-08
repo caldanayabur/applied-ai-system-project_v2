@@ -147,12 +147,12 @@ def recommend_songs_with_descriptions(
     2. Finalizes top-N recommendations
     3. Invokes LLM ONLY to generate lyrical and artist descriptions for each recommendation
     
-    The LLM descriptions focus on:
+    The RAG context and LLM descriptions focus on:
     - What the song's lyrics are generally about (themes, narrative, emotional message)
     - The artist or band's musical style and artistic identity
     
     Args:
-        user_prefs: User preference dictionary (used ONLY for scoring, NOT for LLM)
+        user_prefs: User preference dictionary used to build the recommendation context
         songs: List of song dictionaries
         k: Number of recommendations to return
         use_llm: Whether to use LLM for descriptions (True) or fallback (False)
@@ -162,6 +162,7 @@ def recommend_songs_with_descriptions(
     """
     from .llm_engine import get_llm_engine
     from .logger import recommender_logger
+    from .rag_context import build_rag_context
     
     # Step 1: Get base recommendations using rule-based scoring (unchanged)
     recommendations = recommend_songs(user_prefs, songs, k)
@@ -175,7 +176,10 @@ def recommend_songs_with_descriptions(
         enhanced_recommendations = []
         
         for song, score, base_description in recommendations:
-            # Generate LLM description based ONLY on song metadata, not user preferences or scores
+            scoring_reasons = [reason.strip() for reason in base_description.split(";") if reason.strip()]
+            rag_context = build_rag_context(song, user_prefs, score, scoring_reasons)
+
+            # Use retrieved catalog and match context to ground the description.
             description, success = llm_engine.generate_song_description(
                 song_title=song.get('title', 'Unknown'),
                 artist=song.get('artist', 'Unknown'),
@@ -187,7 +191,8 @@ def recommend_songs_with_descriptions(
                     'valence': song.get('valence', 'N/A'),
                     'danceability': song.get('danceability', 'N/A'),
                     'acousticness': song.get('acousticness', 'N/A')
-                }
+                },
+                rag_context=rag_context,
             )
             
             enhanced_recommendations.append((song, score, description))

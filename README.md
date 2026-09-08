@@ -24,7 +24,7 @@ BeatBuddy implements a simple two-stage recommendation pipeline with supporting 
 
 2. **Description Engine** (`llm_engine.py`): Calls the GitHub Copilot Python SDK to generate a short description for each recommended song using song metadata only. It resolves to an available Copilot model automatically and falls back to rule-based descriptions when needed.
 
-3. **Context Utilities** (`rag_context.py`): Builds formatted song, user, and match context strings for tests and future prompt experiments. The current CLI path does not route through this module.
+3. **RAG Context** (`rag_context.py`): Builds formatted song, user, and match context from the local catalog and passes it to the LLM prompt to ground each description. This is context-based RAG without a separate vector database.
 
 The `main.py` orchestrator drives the flow: load songs → score → generate descriptions for the top recommendations → display results. If the LLM path fails, the code falls back to the base rule-based descriptions.
 

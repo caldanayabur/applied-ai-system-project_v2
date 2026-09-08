@@ -47,7 +47,7 @@ If the Copilot SDK is not available, or if `LLM_FORCE_FALLBACK=1` is set, the sy
 
 ### Supporting Utilities
 
-`rag_context.py` contains formatting helpers for song, user, and match context strings. These helpers are covered by tests, but the current CLI flow does not route through them.
+`rag_context.py` builds context from the selected song, user preferences, and match reasons. The recommendation pipeline sends this context to the LLM prompt, grounding the generated description in the local catalog. This is context-based RAG without a separate vector database.
 
 The `Song`, `UserProfile`, and `Recommender` classes remain in `recommender.py` for compatibility with tests and examples, but the functional API is the main implementation used by the CLI.
 

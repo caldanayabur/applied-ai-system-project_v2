@@ -87,6 +87,25 @@ def test_llm_prompt_building():
     print(f"✓ Prompt built successfully (length: {len(prompt)} chars)")
 
 
+def test_llm_prompt_includes_retrieved_context():
+    """Test that retrieved RAG context is included in the LLM prompt."""
+    engine = LLMEngine()
+    metadata = {"genre": "jazz", "mood": "relaxed"}
+    rag_context = "Title: Blue Train\nReasons for Match:\n  1. genre match (+2.0)"
+
+    prompt = engine._build_prompt(
+        "Blue Train",
+        "John Coltrane",
+        metadata,
+        rag_context=rag_context,
+    )
+
+    assert "Retrieved Context:" in prompt
+    assert "Blue Train" in prompt
+    assert "genre match (+2.0)" in prompt
+    assert "do not mention user preferences" in prompt.lower()
+
+
 def test_description_format():
     """Test that descriptions follow the required format."""
     engine = LLMEngine()
